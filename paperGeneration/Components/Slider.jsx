@@ -16,7 +16,7 @@ const Slider = () => {
 };
 
 export default Slider;
-
+// testing
 const styles = StyleSheet.create({
   container: {
     flex: 1,
