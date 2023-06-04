@@ -1,11 +1,14 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
+
 import Home from "./Pages/Home";
+import MyStack from "./Components/MyStack";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Home />
+      {/* <Home /> */}
+      <MyStack />
     </View>
   );
 }

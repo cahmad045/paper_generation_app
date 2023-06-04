@@ -14,7 +14,7 @@ export default Navbar;
 
 const styles = StyleSheet.create({
   navBar: {
-    height: 50,
+    height: 70,
     backgroundColor: "white",
     flexDirection: "row",
     alignItems: "center",
