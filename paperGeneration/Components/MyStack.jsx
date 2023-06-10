@@ -10,6 +10,7 @@ import ClassSelection from "../Pages/ClassSelection";
 import SubjectSelection from "../Pages/SubjectSelection";
 import PaperCriteria from "../Pages/PaperCriteria";
 import AIGenerationCriteria from "../Pages/AIGenerationCriteria";
+import Paper from "../Pages/Paper";
 
 const Stack = createNativeStackNavigator();
 const MyStack = () => {
@@ -28,6 +29,7 @@ const MyStack = () => {
           name="AIGnerationCriteria"
           component={AIGenerationCriteria}
         />
+        <Stack.Screen name="Paper" component={Paper} />
       </Stack.Navigator>
     </NavigationContainer>
   );

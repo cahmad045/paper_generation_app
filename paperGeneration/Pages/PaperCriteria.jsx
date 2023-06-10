@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
-const PaperCriteria = () => {
+const PaperCriteria = ({ navigation }) => {
   const [numQuestions, setNumQuestions] = useState("");
   const [questions, setQuestions] = useState([]);
   const [showGenerateButton, setShowGenerateButton] = useState(false);
@@ -52,7 +52,8 @@ const PaperCriteria = () => {
 
   const handleGeneratePaper = () => {
     // Logic to generate the paper based on the entered criteria
-    console.log("Generating paper...");
+    // console.log("Generating paper...");
+    navigation.navigate("Paper");
   };
 
   const renderQuestion = (question, index) => {
