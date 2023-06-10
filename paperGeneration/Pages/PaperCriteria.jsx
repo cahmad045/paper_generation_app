@@ -7,11 +7,13 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
 const PaperCriteria = () => {
   const [numQuestions, setNumQuestions] = useState("");
   const [questions, setQuestions] = useState([]);
   const [showGenerateButton, setShowGenerateButton] = useState(false);
+  const [selectedChapters, setSelectedChapters] = useState([]);
 
   const handleNumQuestionsChange = (value) => {
     setNumQuestions(value);
@@ -42,6 +44,10 @@ const PaperCriteria = () => {
     const updatedQuestions = [...questions];
     updatedQuestions[index].choice = value;
     setQuestions(updatedQuestions);
+  };
+
+  const handleChapterSelection = (itemValue, itemIndex) => {
+    setSelectedChapters(itemValue);
   };
 
   const handleGeneratePaper = () => {
@@ -97,6 +103,20 @@ const PaperCriteria = () => {
         value={numQuestions}
         onChangeText={handleNumQuestionsChange}
       />
+      <View style={styles.dropdownContainer}>
+        <Text>Select Chapters:</Text>
+        <Picker
+          style={styles.dropdown}
+          selectedValue={selectedChapters}
+          onValueChange={handleChapterSelection}
+          mode="multiple"
+        >
+          <Picker.Item label="Chapter 1" value="chapter1" />
+          <Picker.Item label="Chapter 2" value="chapter2" />
+          <Picker.Item label="Chapter 3" value="chapter3" />
+          {/* Add more chapters as needed */}
+        </Picker>
+      </View>
       <Button title="Add Questions" onPress={handleAddQuestions} />
       {questions.map(renderQuestion)}
       {showGenerateButton && (
@@ -121,6 +141,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 5,
     marginBottom: 10,
+  },
+  dropdownContainer: {
+    marginBottom: 10,
+  },
+  dropdown: {
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 5,
   },
   questionContainer: {
     marginBottom: 20,
