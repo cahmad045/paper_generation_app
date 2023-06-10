@@ -7,8 +7,12 @@ import TestingNav from "../Components/TestingNav";
 // import NavigationBar from "react-native-navbar";
 
 const Home = ({ navigation }) => {
-  const handleButtonPress = () => {
+  const handlePaperGneration = () => {
     navigation.navigate("ClassSelection");
+  };
+
+  const handleAIgeneration = () => {
+    navigation.navigate("AIGnerationCriteria");
   };
   return (
     <View style={styles.container}>
@@ -19,7 +23,7 @@ const Home = ({ navigation }) => {
         <View style={styles.buttonStyle}>
           <ButtonDesign
             buttonText="AI Generation"
-            onPress={handleButtonPress}
+            onPress={handleAIgeneration}
             buttonWidth={150}
             buttonHeight={100}
           />
@@ -28,7 +32,7 @@ const Home = ({ navigation }) => {
           <ButtonDesign
             style={styles.buttonStyle}
             buttonText="Paper Generation"
-            onPress={handleButtonPress}
+            onPress={handlePaperGneration}
             buttonWidth={150}
             buttonHeight={100}
           />
@@ -50,9 +54,11 @@ const styles = StyleSheet.create({
     // Adjust the value to move the button up or down
     alignSelf: "center",
     flexDirection: "row",
+    // backgroundColor: "red",
   },
 
   buttonStyle: {
     margin: 10,
+    // color: "red",
   },
 });
