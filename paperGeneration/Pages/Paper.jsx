@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
   },
   paper: {
     // borderWidth: 1,
-    // borderColor: "black",
     // borderRadius: 5,
     padding: 20,
   },

@@ -51,8 +51,6 @@ const PaperCriteria = ({ navigation }) => {
   };
 
   const handleGeneratePaper = () => {
-    // Logic to generate the paper based on the entered criteria
-    // console.log("Generating paper...");
     navigation.navigate("Paper");
   };
 
