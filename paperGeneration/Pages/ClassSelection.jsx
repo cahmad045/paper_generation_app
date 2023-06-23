@@ -1,10 +1,21 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TestingNav from "../Components/TestingNav";
 import Slider from "../Components/Slider";
 import ButtonDesign from "../Components/ButtonDesign";
+import { paperServices } from "../Services/PaperGenerationServices";
 
 const ClassSelection = ({ navigation }) => {
+  const [loading, setLoading] = useState(true);
+  const [classes, setClasses] = useState([])
+  useEffect(() => {
+    paperServices.getClasses()
+      .then(value => setClasses(value?.classLevels))
+      .catch((error) => {
+        console.log(error, "classes", error.message)
+      })
+      .finally(() => setLoading(false))
+  }, [navigation])
   const handleButtonPress = () => {
     navigation.navigate("SubjectSelection");
   };
@@ -13,11 +24,39 @@ const ClassSelection = ({ navigation }) => {
       <TestingNav />
       <View style={{ flex: 1 }}>
         <Slider />
+        <View
+      //  style={styles.buttonContainer}
+      >
+               {classes &&
+          classes?.map((value, index) => (
+            <View key={index} style={styles.buttonStyle}>
+              <ButtonDesign
+                onPress={handleButtonPress}
+                buttonText={value?.level}
+                buttonWidth={150}
+                buttonHeight={100}
+              />
+            </View>
+          ))        }
+      </View>
       </View>
       {/* <Text>Select any class...</Text> */}
 
-      <View style={styles.buttonContainer}>
-        <View>
+      <View
+      //  style={styles.buttonContainer}
+      >
+        {/* {classes &&
+          classes?.map((value, index) => (
+            <View key={index} style={styles.buttonStyle}>
+              <ButtonDesign
+                onPress={handleButtonPress}
+                buttonText={value?.level}
+                buttonWidth={150}
+                buttonHeight={100}
+              />
+            </View>
+          ))        } */}
+        {/* <View>
           <View style={styles.buttonStyle}>
             <ButtonDesign
               onPress={handleButtonPress}
@@ -55,7 +94,7 @@ const ClassSelection = ({ navigation }) => {
               buttonHeight={100}
             />
           </View>
-        </View>
+        </View> */}
       </View>
     </View>
   );
