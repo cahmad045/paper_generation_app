@@ -33,9 +33,9 @@ class AuthServices extends GenericServices{
     }
 
     logOut = ()=>{
-        localStorage.clear();
-        window.location.reload();
-        window.location.href="/";
+        // localStorage.clear();
+        // window.location.reload();
+        // window.location.href="/";
     }
     
     isLogged = ()=>{
@@ -55,5 +55,4 @@ class AuthServices extends GenericServices{
     // }
 }
 
-let authServices = new AuthServices(APIuser);
-export default authServices;
+export const authServices = new AuthServices(APIuser);

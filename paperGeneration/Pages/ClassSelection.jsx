@@ -4,10 +4,12 @@ import TestingNav from "../Components/TestingNav";
 import Slider from "../Components/Slider";
 import ButtonDesign from "../Components/ButtonDesign";
 import { paperServices } from "../Services/PaperGenerationServices";
-
+import { useDispatch } from "react-redux"
+import { setclassLevelId, setclassLevelName } from "../redux/PaperSlice";
 const ClassSelection = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [classes, setClasses] = useState([])
+  const dispatch = useDispatch();
   useEffect(() => {
     paperServices.getClasses()
       .then(value => setClasses(value?.classLevels))
@@ -16,6 +18,16 @@ const ClassSelection = ({ navigation }) => {
       })
       .finally(() => setLoading(false))
   }, [navigation])
+
+  const handleClassLevelClick = (event, classLevel, classLevelId) => {
+    // const classLevel = event.target.value;
+    console.log(classLevel, event.target.id);
+    console.log(classLevel, classLevelId);
+    dispatch(setclassLevelId(classLevelId));
+    dispatch(setclassLevelName(classLevel));
+    navigation.navigate("SubjectSelection");
+    // console.log("button clicked")
+  };
   const handleButtonPress = () => {
     navigation.navigate("SubjectSelection");
   };
@@ -25,20 +37,21 @@ const ClassSelection = ({ navigation }) => {
       <View style={{ flex: 1 }}>
         <Slider />
         <View
-      //  style={styles.buttonContainer}
-      >
-               {classes &&
-          classes?.map((value, index) => (
-            <View key={index} style={styles.buttonStyle}>
-              <ButtonDesign
-                onPress={handleButtonPress}
-                buttonText={value?.level}
-                buttonWidth={150}
-                buttonHeight={100}
-              />
-            </View>
-          ))        }
-      </View>
+        //  style={styles.buttonContainer}
+        >
+          {classes &&
+            classes?.map((value, index) => (
+              <View key={index} style={styles.buttonStyle}>
+                <ButtonDesign
+                  key={index}
+                  onPress={(e) => handleClassLevelClick(e, value?.level, value?._id)}
+                  buttonText={value?.level}
+                  buttonWidth={150}
+                  buttonHeight={100}
+                />
+              </View>
+            ))}
+        </View>
       </View>
       {/* <Text>Select any class...</Text> */}
 

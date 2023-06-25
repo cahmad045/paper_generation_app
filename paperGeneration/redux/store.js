@@ -38,8 +38,8 @@ export const store = configureStore({
   reducer: {
     counter: counterSlice,
     amount: amountSlice,
-    user: AdminSlice, //persisted User instead of userSlice
-    admin: userSlice, //persisted User instead of userSlice
+    user: userSlice, //persisted User instead of userSlice
+    admin: AdminSlice, //persisted User instead of userSlice
     paper: PaperSlice,
     previousPaper: PreviousPaperSlice
   },

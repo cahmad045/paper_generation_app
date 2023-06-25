@@ -16,14 +16,13 @@ export const userSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      console.log("Updated User Slice ====> ", {state:state, action:action});
+      // console.log("Updated User Slice ====> ", {state:state, action:action});
       state.email = action.payload.email;
       state.isAdmin = action.payload.isAdmin;
       state.isLoggedIn = action.payload.isLoggedIn;
       state.token = action.payload.token;
-      localStorage.setItem("us", JSON.stringify({...initialState, ...action.payload}))
+      // localStorage.setItem("us", JSON.stringify({...initialState, ...action.payload}))
     }
-    
   },
 })
 

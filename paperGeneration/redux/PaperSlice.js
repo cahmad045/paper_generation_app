@@ -30,7 +30,7 @@ const PaperSlice = createSlice({
     shortQuestions: [
       {
         section: 0,
-        type: "",
+        type: "short",
         total: 0,
         attempt: 0,
         marks: 0,
@@ -40,7 +40,7 @@ const PaperSlice = createSlice({
     longQuestions: [
       {
         section: 0,
-        type: "",
+        type: "long",
         totalQuestions: 0,
         attempt: 0,
         totalMarks: 0,
@@ -184,6 +184,10 @@ const PaperSlice = createSlice({
       state.shortQuestions[action?.payload?.index].chapters =
         action?.payload?.value;
     },
+    setChaptersLong: (state, action) => {
+      state.longQuestions[action?.payload?.index].chapters =
+        action?.payload?.value;
+    },
     removeSectionShort: (state, action) => {
       state.shortQuestions.splice(action?.payload?.index, 1);
     },
@@ -275,6 +279,7 @@ export const {
   setMarksShort,
   setChoiceShort,
   setChaptersShort,
+  setChaptersLong,
   removeSectionShort,
   setAddChapterShort,
   setRemoveChapterShort,
