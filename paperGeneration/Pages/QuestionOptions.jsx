@@ -5,7 +5,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-const QuestionOptions = ({ onDeleteQ }) => {
+const QuestionOptions = ({
+    onDeleteQ = () => { },
+    onEdit = () => { },
+    onReplace = () => { },
+
+}) => {
     const [isActive, setIsActive] = useState(false)
     return (
         <>
@@ -35,6 +40,10 @@ const QuestionOptions = ({ onDeleteQ }) => {
                     <Pressable
                         pressRetentionOffset={150}
                         android_ripple={{ color: '#d14843', borderless: true }}
+                        onPress={() => {
+                            onReplace()
+                            setIsActive(false)
+                        }}
                     >
                         <Feather name="repeat" size={24} color="orange" />
                     </Pressable>

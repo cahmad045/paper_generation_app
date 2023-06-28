@@ -2,12 +2,17 @@ import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, Image, ScrollView, StyleSheet, Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import QuestionOptions from "./QuestionOptions";
+import { paperServices } from "../Services/PaperGenerationServices";
+import { useSelector } from "react-redux";
+import { selectPaper } from "../redux/PaperSlice";
 
 const Paper = ({ navigation, route, ...props }) => {
   const logo = require("../assets/COMSATS.jpg");
-
+  const paper = useSelector(selectPaper)
   const [paperResponse, setPaperResponse] = useState(route?.params?.paper || {})
   const [institute, setInstituteLocal] = useState(route?.params?.institute || {})
+  const [replacedQuestions, setReplacedQuestions] = useState([]);
+
   useEffect(() => {
     console.log()
   }, [institute])
@@ -17,7 +22,53 @@ const Paper = ({ navigation, route, ...props }) => {
     arr.shortQuestions[secInd].questions?.splice(qInd, 1)
     setPaperResponse(arr);
   })
+  const onDeleteLQ = useCallback((secInd, qInd) => {
+    // console.log(secInd, qInd)
+    let arr = { ...paperResponse }
+    arr.longQuestions[secInd].questions?.splice(qInd, 1)
+    setPaperResponse(arr);
+  })
+  const onReplaceSuccess = useCallback((secindex, qIndex, toBeReplacedId, type, newQuestion) => {
+    if (type === 'short') paperResponse.shortQuestions[secindex].questions[qIndex] = newQuestion
+    if (type === 'long') paperResponse.longQuestions[secindex].questions[qIndex] = newQuestion
+    if (!replacedQuestions.indexOf(toBeReplacedId) >= 0)
+      setReplacedQuestions([...replacedQuestions, toBeReplacedId])
+  })
+  const onReplace = useCallback((secindex, qIndex, toBeReplacedId, type) => {
+    // console.log({ secindex, qIndex, type })
+    let chapterIds = [];
+    let prevQuestions = [];
+    console.log({secindex, qIndex, toBeReplacedId, type})
+    if (type === 'short') {
+      chapterIds = [...paperResponse?.shortQuestions[secindex].chapters];
+      paperResponse?.shortQuestions[secindex]?.questions?.map((q, i) => {
+        prevQuestions.push(q?._id)
+      })
+    }
+    else if (type === "long") {
+      chapterIds = paperResponse?.longQuestions[secindex].chapters;
+      paperResponse?.longQuestions[secindex]?.questions?.map((q, i) => {
+        prevQuestions.push(q?._id)
+      })
+    }
 
+    if (type === "long" || type === "short") {
+      if (replacedQuestions?.indexOf(toBeReplacedId) === -1) {
+        console.log("Replacing")
+        paperServices.replaceQuestion(paper?.classLevelId, paper?.subjectId, chapterIds, [...replacedQuestions, ...prevQuestions])
+          .then(result => {
+            // console.log("replaced")
+            // console.log(result, "replace success", toBeReplacedId)
+            onReplaceSuccess(secindex, qIndex, toBeReplacedId, type, result?.question)
+          })
+          .catch(error => {
+            console.log(error, "replace error", toBeReplacedId)
+          })
+        console.log("Replaced: ", replacedQuestions?.indexOf(toBeReplacedId), replacedQuestions)
+      }
+      else console.log("Not Replaced: ", replacedQuestions?.indexOf(toBeReplacedId), replacedQuestions)
+    }
+  })
   return (
     // <View style={styles.viewer}>
     <View style={styles.container}>
@@ -64,7 +115,7 @@ const Paper = ({ navigation, route, ...props }) => {
             <>
               {paperResponse?.shortQuestions?.map((sq, index) => (
                 <>
-                  <View style={styles.section_main_view}>
+                  <View key={index} style={styles.section_main_view}>
                     <View style={styles.section_head_view}>
                       <Text style={styles.question_heading}>
                         Q {index + 1}: Attempt {sq.attempt} question(s)
@@ -77,12 +128,17 @@ const Paper = ({ navigation, route, ...props }) => {
                   <View style={styles.questions_container}>
 
                     {sq?.questions?.map((q, i) => (
-                      <View style={styles.question_view}>
+                      <View key={i} style={styles.question_view}>
                         <View style={styles.question}>
                           {/* <Text>{i + 1}. </Text> */}
                           <Text>{i + 1}. {q?.statement}</Text>
                         </View>
-                        <QuestionOptions onDeleteQ={()=>{onDeleteQ(index,i)}} />
+                        <QuestionOptions
+                          onDeleteQ={() => { onDeleteQ(index, i) }}
+                          onReplace={() => {
+                            onReplace(index, i, q?._id, 'short')
+                          }}
+                        />
                       </View>
                     ))}
                   </View>
@@ -95,7 +151,7 @@ const Paper = ({ navigation, route, ...props }) => {
               <Text style={{ alignSelf: "center", marginTop: 8, fontFamily: 'Times New Roman Bold', fontWeight: 'bold' }}>Long Questions</Text>
               {paperResponse?.longQuestions?.map((sq, index) => (
                 <>
-                  <View style={styles.section_main_view}>
+                  <View key={index} style={styles.section_main_view}>
                     <View style={styles.section_head_view}>
                       <Text style={styles.question_heading}>
                         Q {index + 1}: Attempt {sq.attempt} question(s)
@@ -108,14 +164,14 @@ const Paper = ({ navigation, route, ...props }) => {
                   <View style={styles.questions_container}>
 
                     {sq?.questions?.map((q, i) => (
-                      <View style={styles.question_view}>
+                      <View key={i} style={styles.question_view}>
                         <View style={styles.question}>
                           {/* <Text>{i + 1}. </Text> */}
                           <Text>{i + 1}. {q?.statement}</Text>
                         </View>
-                        <QuestionOptions onDeleteQ={()=>{
-                          console.log("Question Options")
-                        }}/>
+                        <QuestionOptions
+                          onDeleteQ={() => { onDeleteLQ(index, i) }}
+                        />
                       </View>
                     ))}
                   </View>

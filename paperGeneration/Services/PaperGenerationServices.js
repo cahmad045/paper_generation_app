@@ -77,7 +77,7 @@ class PaperGenerationServices extends GenericServices {
   }
   generatePaper = (paperCriteria) => {
     return new Promise((resolve, reject) => {
-      this.post(links.generate, {...paperCriteria, institute: null})
+      this.post(links.generate, { ...paperCriteria, institute: null })
         .then(data => resolve(data))
         .catch(error => reject(error))
     })
@@ -88,6 +88,13 @@ class PaperGenerationServices extends GenericServices {
     formData.append("subjectId", subjectId);
     formData.append("chapterIds", JSON.stringify(chapterIds));
     formData.append("prevQuestions", JSON.stringify(prevQuestions));
+    // console.log({
+    //   classLevelId,
+    //   subjectId,
+    //   chapterIds: JSON.stringify(chapterIds),
+    //   prevQuestions: JSON.stringify(prevQuestions),
+    // })
+    // debugger
     return new Promise((resolve, reject) => {
       this.post(links.replace, formData)
         .then(data => resolve(data))
