@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, Image, ScrollView, StyleSheet, Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import QuestionOptions from "./QuestionOptions";
@@ -11,6 +11,13 @@ const Paper = ({ navigation, route, ...props }) => {
   useEffect(() => {
     console.log()
   }, [institute])
+  const onDeleteQ = useCallback((secInd, qInd) => {
+    // console.log(secInd, qInd)
+    let arr = { ...paperResponse }
+    arr.shortQuestions[secInd].questions?.splice(qInd, 1)
+    setPaperResponse(arr);
+  })
+
   return (
     // <View style={styles.viewer}>
     <View style={styles.container}>
@@ -75,7 +82,7 @@ const Paper = ({ navigation, route, ...props }) => {
                           {/* <Text>{i + 1}. </Text> */}
                           <Text>{i + 1}. {q?.statement}</Text>
                         </View>
-                        <QuestionOptions />
+                        <QuestionOptions onDeleteQ={()=>{onDeleteQ(index,i)}} />
                       </View>
                     ))}
                   </View>
@@ -106,7 +113,9 @@ const Paper = ({ navigation, route, ...props }) => {
                           {/* <Text>{i + 1}. </Text> */}
                           <Text>{i + 1}. {q?.statement}</Text>
                         </View>
-                        <QuestionOptions/>
+                        <QuestionOptions onDeleteQ={()=>{
+                          console.log("Question Options")
+                        }}/>
                       </View>
                     ))}
                   </View>

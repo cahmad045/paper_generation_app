@@ -4,7 +4,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-export default function QuestionOptions() {
+
+const QuestionOptions = ({ onDeleteQ }) => {
     const [isActive, setIsActive] = useState(false)
     return (
         <>
@@ -46,6 +47,10 @@ export default function QuestionOptions() {
                     <Pressable
                         pressRetentionOffset={150}
                         android_ripple={{ color: '#d14843', borderless: true }}
+                        onPress={() => {
+                            onDeleteQ()
+                            setIsActive(false)
+                        }}
                     >
                         <MaterialIcons name="delete" size={24} color="red" />
                     </Pressable>
@@ -60,6 +65,8 @@ export default function QuestionOptions() {
         </>
     )
 }
+
+export default QuestionOptions
 
 const styles = StyleSheet.create({
     icons_box: {
