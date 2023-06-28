@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, ScrollView, StyleSheet, Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import QuestionOptions from "./QuestionOptions";
 
 const Paper = ({ navigation, route, ...props }) => {
   const logo = require("../assets/COMSATS.jpg");
@@ -29,9 +30,9 @@ const Paper = ({ navigation, route, ...props }) => {
             <View style={styles.head_text_view}>
               <Text style={styles.text_heading}>{institute.instituteName}</Text>
               <Text style={styles.text_sub_heading}>Class:{paperResponse?.classLevelName?.toUpperCase()}</Text>
+              <Text style={styles.text_sub_heading}>Subject:{paperResponse?.subjectName?.toUpperCase()}</Text>
               <Text style={styles.text_sub_heading}>Name:</Text>
               <Text style={styles.text_sub_heading}>Date:</Text>
-              <Text style={styles.text_sub_heading}>Subject:{paperResponse?.subjectName?.toUpperCase()}</Text>
               <Text style={styles.text_sub_heading}>Roll No:</Text>
               <Text style={styles.text_normal}>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -74,24 +75,7 @@ const Paper = ({ navigation, route, ...props }) => {
                           {/* <Text>{i + 1}. </Text> */}
                           <Text>{i + 1}. {q?.statement}</Text>
                         </View>
-                        <Pressable
-                          pressRetentionOffset={50}
-                          android_ripple={{ color: '#0f0f77', borderless: true }}
-                          style={[styles.icon]}
-                          onPressOut={() => {
-                            // setChange(!change)
-                            // toggelModal()
-                            // questionSelection(index, item)
-
-                          }}
-                        >
-                          <MaterialCommunityIcons
-                            name="dots-vertical"
-                            size={24}
-                            color="grey"
-                            style={{ marginRight: 4 }}
-                          />
-                        </Pressable>
+                        <QuestionOptions />
                       </View>
                     ))}
                   </View>
@@ -122,24 +106,7 @@ const Paper = ({ navigation, route, ...props }) => {
                           {/* <Text>{i + 1}. </Text> */}
                           <Text>{i + 1}. {q?.statement}</Text>
                         </View>
-                        <Pressable
-                          pressRetentionOffset={50}
-                          android_ripple={{ color: '#0f0f77', borderless: true }}
-                          style={[styles.icon]}
-                          onPressOut={() => {
-                            // setChange(!change)
-                            // toggelModal()
-                            // questionSelection(index, item)
-
-                          }}
-                        >
-                          <MaterialCommunityIcons
-                            name="dots-vertical"
-                            size={24}
-                            color="grey"
-                            style={{ marginRight: 4 }}
-                          />
-                        </Pressable>
+                        <QuestionOptions/>
                       </View>
                     ))}
                   </View>
@@ -321,6 +288,7 @@ const styles = StyleSheet.create({
   question_view: {
     flexDirection: "row",
     justifyContent: "space-between",
+    position: 'relative',
   },
   question: {
     width: "90%",
