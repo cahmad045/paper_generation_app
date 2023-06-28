@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import MultiSelect from 'react-native-multiple-select';
 import {
   View,
@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useDispatch, useSelector } from "react-redux";
-import { addSectionLQ, addSectionSQ, removeSectionLong, removeSectionShort, selectPaper, setChaptersLong, setChaptersNames, setChaptersShort, setChoiceLong, setChoiceShort, setIsLong, setIsShort, setLongEmpty, setMarksLong, setMarksShort, setShortEmpty, setTotalLong, setTotalShort, settotalCh, settotalChapters } from "../redux/PaperSlice";
+import { addSectionLQ, addSectionSQ, removeSectionLong, removeSectionShort, selectPaper, setChaptersLong, setChaptersNames, setChaptersShort, setChoiceLong, setChoiceShort, setInstitue, setIsLong, setIsShort, setLongEmpty, setMarksLong, setMarksShort, setShortEmpty, setTotalLong, setTotalShort, settotalCh, settotalChapters } from "../redux/PaperSlice";
 import { paperServices } from "../Services/PaperGenerationServices";
 // Dummy Data for the MutiSelect
 const items = [
@@ -40,10 +40,26 @@ const PaperCriteria = ({ navigation }) => {
   const [checkedItems, setCheckedItems] = useState([]);
   const [showShortData, setShowShortData] = useState(false);
   const [showLongData, setShowLongData] = useState(false);
+  const [institute, setInstitute] = useState({})
   useEffect(() => {
     dispatch(setIsShort(showShortData))
     dispatch(setIsLong(showLongData))
   }, [showShortData, showLongData])
+
+  const getProfile = useCallback(() => {
+    paperServices.getProfile()
+      .then(result => {
+        console.log(result?.institute?.instituteName, "User Profile")
+        dispatch(setInstitue(result?.institute))
+        setInstitute(result?.institute)
+      })
+      .catch(error => {
+        console.log(error, "get profile error")
+      })
+  }, [])
+  useEffect(() => {
+    getProfile()
+  }, [])
   const handleShortToggle = () => {
     setShowShortData(!showShortData);
   };
@@ -105,12 +121,13 @@ const PaperCriteria = ({ navigation }) => {
     setIsGenerating(true)
     paperServices?.generatePaper(paper).then((result) => {
       console.log("Paper Generated", JSON.stringify(result))
+      navigation.navigate("Paper", { paper: result, institute: institute });
     })
       .catch((error => {
         console.log(error, "Generate Error")
       }))
       .finally(() => {
-        setTimeout(()=> setIsGenerating(false), 2000)
+        setTimeout(() => setIsGenerating(false), 2000)
       })
   }
   // asad
@@ -421,7 +438,7 @@ const styles = StyleSheet.create({
     padding: 20,
     // flex: 1,
   },
-  disabled:{
+  disabled: {
     opacity: .3
   },
   generate: {

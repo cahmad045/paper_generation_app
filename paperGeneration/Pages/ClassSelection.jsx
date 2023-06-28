@@ -53,62 +53,6 @@ const ClassSelection = ({ navigation }) => {
             ))}
         </View>
       </View>
-      {/* <Text>Select any class...</Text> */}
-
-      <View
-      //  style={styles.buttonContainer}
-      >
-        {/* {classes &&
-          classes?.map((value, index) => (
-            <View key={index} style={styles.buttonStyle}>
-              <ButtonDesign
-                onPress={handleButtonPress}
-                buttonText={value?.level}
-                buttonWidth={150}
-                buttonHeight={100}
-              />
-            </View>
-          ))        } */}
-        {/* <View>
-          <View style={styles.buttonStyle}>
-            <ButtonDesign
-              onPress={handleButtonPress}
-              buttonText="Matric I (9th)"
-              buttonWidth={150}
-              buttonHeight={100}
-            />
-          </View>
-          <View style={styles.buttonStyle}>
-            <ButtonDesign
-              onPress={handleButtonPress}
-              style={styles.buttonStyle}
-              buttonText="Intermediate I (11th)"
-              buttonWidth={150}
-              buttonHeight={100}
-            />
-          </View>
-        </View>
-        <View>
-          <View style={styles.buttonStyle}>
-            <ButtonDesign
-              onPress={handleButtonPress}
-              style={styles.buttonStyle}
-              buttonText="Matric II (10th)"
-              buttonWidth={150}
-              buttonHeight={100}
-            />
-          </View>
-          <View style={styles.buttonStyle}>
-            <ButtonDesign
-              onPress={handleButtonPress}
-              style={styles.buttonStyle}
-              buttonText="Intermediate II (12th)"
-              buttonWidth={150}
-              buttonHeight={100}
-            />
-          </View>
-        </View> */}
-      </View>
     </View>
   );
 };

@@ -18,7 +18,7 @@ const Home = ({ navigation }) => {
     console.log(user.isLoggedIn, "user state home jsx")
   }, [user])
   useEffect(() => {
-    console.log(JSON.stringify(paper), "paper state home jsx")
+    // console.log(JSON.stringify(paper), "paper state home jsx")
   }, [paper])
   useEffect(() => {
     authServices.login("user@gmail.com", "1234567890")

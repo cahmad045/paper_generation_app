@@ -77,7 +77,7 @@ class PaperGenerationServices extends GenericServices {
   }
   generatePaper = (paperCriteria) => {
     return new Promise((resolve, reject) => {
-      this.post(links.generate, paperCriteria)
+      this.post(links.generate, {...paperCriteria, institute: null})
         .then(data => resolve(data))
         .catch(error => reject(error))
     })
