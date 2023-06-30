@@ -121,7 +121,7 @@ const Paper = ({ navigation, route, ...props }) => {
         // console.log("Replacing")
         await paperServices.replaceQuestion(paper?.classLevelId, paper?.subjectId, chapterIds, [...replacedQuestions, ...prevQuestions])
           .then(result => {
-            // console.log("replaced")
+            console.log("replaced")
             console.log(result, "replace success", toBeReplacedId)
             onReplaceSuccess(secindex, qIndex, toBeReplacedId, type, result?.question)
           })
@@ -181,7 +181,7 @@ const Paper = ({ navigation, route, ...props }) => {
         <View
           style={[
             styles.section_main_scrollview,
-            { borderColor: "yellow", height: "80%" },
+            { borderColor: "yellow", height: "80%", paddingBottom: 20, },
           ]}
         >
           {paperResponse?.isShort &&
@@ -242,7 +242,7 @@ const Paper = ({ navigation, route, ...props }) => {
                       <Pressable
                         pressRetentionOffset={50}
                         android_ripple={{ color: '#d14843', borderless: true }}
-                        onPress={() => onAddQuestion({ type: 'short' }, index)}
+                        onPress={() => onAddQuestion({ type: 'long' }, index)}
                       >
                         <AntDesign name="pluscircleo" size={24} color="black" />
                       </Pressable>
@@ -261,6 +261,12 @@ const Paper = ({ navigation, route, ...props }) => {
                         </View>
                         <QuestionOptions
                           onDeleteQ={() => { onDeleteLQ(index, i) }}
+                          onReplaceData={{ index, i, q_id: q?._id, type: 'long' }}
+                          onReplace={onReplace}
+                          onEdit={() => {
+                            onEdit(q, index, i, q?.Chapter)
+                            setOpen(true)
+                          }}
                         />
                       </View>
                     ))}

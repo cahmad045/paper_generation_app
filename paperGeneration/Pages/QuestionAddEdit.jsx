@@ -27,7 +27,7 @@ const QuestionAddEdit = ({
     isEdit = true
 }) => {
     const [modalVisible, setModalVisible] = useState(open);
-    const [type, setType] = React.useState(data?.type || 'short')
+    const [type, setType] = React.useState(data.type)
     // console.log("Question data: ", data)
     const paper = useSelector(selectPaper)
     const [chapters, setChapters] = React.useState(paper?.totalCh || [])
@@ -51,42 +51,17 @@ const QuestionAddEdit = ({
             }}>
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <View>
+                    <View style={{ width: '100%' }}>
                         <Text style={{ borderBottomWidth: 1, fontWeight: 'bold' }} id="transition-modal-title">
                             {isEdit ? "Edit" : "Add"} Question
                         </Text>
-                        <View id="transition-modal-description" style={{ marginTop: 2 }}>
+                        <View id="transition-modal-description" style={{ marginTop: 2, width: '100%' }}>
+                            <Text id="demo-simple-select-label" style={{fontWeight: 'bold'}}>Type:</Text>
+                            <Text style={{ marginLeft: 10 }}>{data.type === 'short' && "Short"} {data.type === 'long' && "Long"} Question</Text>
+
                             {!isEdit &&
                                 <>
-                                    <Text id="demo-simple-select-label">Type:</Text>
-                                    {type === 'short' && <Text style={{ marginLeft: 10, fontWeight: 'bold' }}>Short Question</Text>}
-                                    {type === 'long' && <Text style={{ marginLeft: 10, fontWeight: 'bold' }}>Long Question</Text>}
-                                    {/* <Text
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    // defaultValue={questionType ?? 'long'}
-                                    disabled={isEdit}
-                                    value={type}
-                                    label="Question Type"
-                                // onChange={(e) => setType(e.target.value)}
-                                >
-                                    <MenuItem value={'short'}>Short Question</MenuItem>
-                                    <MenuItem value={'long'}>Long Question</MenuItem>
-                                </Text> */}
-                                    {/* <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    disabled={isEdit}
-                                    // value={type}
-                                    label="Select Relatead Chapter"
-                                    placeholder='Select Relatead Chapter'
-                                    // defaultOpen={"1"}
-                                    style={{ minWidth: '100px' }}
-                                    // sx={{minWidth: 100}}
-                                    onChange={(e) => onChangeData({ ...data, Chapter: e.target?.value })}
-                                > */}
-                                    {/* <MenuItem value={'1'}>{"Select Related Chapter"}</MenuItem> */}
-                                    <Text id="demo-simple-select-label">Select Relatead Chapter</Text>
+                                    <Text id="demo-simple-select-label" style={{marginTop:10, fontWeight: 'bold'}}>Select Relatead Chapter:</Text>
                                     <Picker
                                         selectedValue={data.Chapter}
                                         onValueChange={(itemValue, itemIndex) => {
@@ -99,13 +74,14 @@ const QuestionAddEdit = ({
                                     </Picker>
                                 </>
                             }
+                            <Text style={{ marginBottom: 2, marginTop: 5, fontWeight:'bold' }}>Question Statement:</Text>
                             <TextInput
                                 id="question"
+                                style={{ borderWidth: 1, paddingHorizontal: 5, borderRadius: 10, width: "100%" }}
                                 placeholder='Write your own question'
                                 numberOfLines={3}
                                 multiline
                                 value={data.statement}
-                                style={{ borderWidth: 1, paddingHorizontal: 5, borderRadius: 10, width: "100%" }}
                                 onChangeText={(text) => onChangeData({ ...data, statement: text })}
                             />
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 20 }}>
@@ -154,6 +130,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 20,
+        width: "80%",
         backgroundColor: 'white',
         borderRadius: 20,
         padding: 35,
