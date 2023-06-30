@@ -34,11 +34,11 @@ const Paper = ({ navigation, route, ...props }) => {
     if (!replacedQuestions.indexOf(toBeReplacedId) >= 0)
       setReplacedQuestions([...replacedQuestions, toBeReplacedId])
   })
-  const onReplace = useCallback((secindex, qIndex, toBeReplacedId, type) => {
+  const onReplace = useCallback(async (secindex, qIndex, toBeReplacedId, type) => {
     // console.log({ secindex, qIndex, type })
     let chapterIds = [];
     let prevQuestions = [];
-    console.log({secindex, qIndex, toBeReplacedId, type})
+    // console.log({ secindex, qIndex, toBeReplacedId, type })
     if (type === 'short') {
       chapterIds = [...paperResponse?.shortQuestions[secindex].chapters];
       paperResponse?.shortQuestions[secindex]?.questions?.map((q, i) => {
@@ -54,11 +54,11 @@ const Paper = ({ navigation, route, ...props }) => {
 
     if (type === "long" || type === "short") {
       if (replacedQuestions?.indexOf(toBeReplacedId) === -1) {
-        console.log("Replacing")
-        paperServices.replaceQuestion(paper?.classLevelId, paper?.subjectId, chapterIds, [...replacedQuestions, ...prevQuestions])
+        // console.log("Replacing")
+        await paperServices.replaceQuestion(paper?.classLevelId, paper?.subjectId, chapterIds, [...replacedQuestions, ...prevQuestions])
           .then(result => {
             // console.log("replaced")
-            // console.log(result, "replace success", toBeReplacedId)
+            console.log(result, "replace success", toBeReplacedId)
             onReplaceSuccess(secindex, qIndex, toBeReplacedId, type, result?.question)
           })
           .catch(error => {
@@ -135,9 +135,8 @@ const Paper = ({ navigation, route, ...props }) => {
                         </View>
                         <QuestionOptions
                           onDeleteQ={() => { onDeleteQ(index, i) }}
-                          onReplace={() => {
-                            onReplace(index, i, q?._id, 'short')
-                          }}
+                          onReplaceData={{index, i, q_id: q?._id, type: 'short'}}
+                          onReplace={onReplace}
                         />
                       </View>
                     ))}

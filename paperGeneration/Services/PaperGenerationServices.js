@@ -88,15 +88,10 @@ class PaperGenerationServices extends GenericServices {
     formData.append("subjectId", subjectId);
     formData.append("chapterIds", JSON.stringify(chapterIds));
     formData.append("prevQuestions", JSON.stringify(prevQuestions));
-    // console.log({
-    //   classLevelId,
-    //   subjectId,
-    //   chapterIds: JSON.stringify(chapterIds),
-    //   prevQuestions: JSON.stringify(prevQuestions),
-    // })
-    // debugger
+
+    //here form data is not used because it was creating network error.
     return new Promise((resolve, reject) => {
-      this.post(links.replace, formData)
+      this.post(links.replace, { classLevelId, subjectId, chapterIds, prevQuestions })
         .then(data => resolve(data))
         .catch(error => reject(error))
     })

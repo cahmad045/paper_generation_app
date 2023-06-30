@@ -34,6 +34,7 @@ export const APIS = {
         questionsOfChapters: "questions",
         generate: "generate",
         replace:'replace',
+        replace2:'replace2',
         approval: "add-question",
         approvalNew: "add-question-new",
         userInstitue: 'user-institue',

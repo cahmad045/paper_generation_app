@@ -8,10 +8,12 @@ import { AntDesign } from '@expo/vector-icons';
 const QuestionOptions = ({
     onDeleteQ = () => { },
     onEdit = () => { },
-    onReplace = () => { },
+    onReplace = async () => { },
+    onReplaceData = {},
 
 }) => {
     const [isActive, setIsActive] = useState(false)
+    const {index, i, q_id, type} = onReplaceData
     return (
         <>
             <Pressable
@@ -40,9 +42,12 @@ const QuestionOptions = ({
                     <Pressable
                         pressRetentionOffset={150}
                         android_ripple={{ color: '#d14843', borderless: true }}
-                        onPress={() => {
-                            onReplace()
+                        onPress={async () => {
+                            // console.log("replacing")
+                            await onReplace(index, i, q_id, type)
+                            console.log("onReplace Done")
                             setIsActive(false)
+                            console.log("set active false")
                         }}
                     >
                         <Feather name="repeat" size={24} color="orange" />

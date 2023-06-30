@@ -117,9 +117,9 @@ const PaperCriteria = ({ navigation }) => {
     dispatch(setLongEmpty())
   }, [])
 
-  const onGenerate = () => {
+  const onGenerate = async () => {
     setIsGenerating(true)
-    paperServices?.generatePaper(paper).then((result) => {
+   await paperServices?.generatePaper(paper).then((result) => {
       console.log("Paper Generated", JSON.stringify(result))
       navigation.navigate("Paper", { paper: result, institute: institute });
     })
@@ -424,7 +424,10 @@ const PaperCriteria = ({ navigation }) => {
           </View>
         ))}
       </>}
-      <TouchableOpacity disabled={isGenerating} style={[styles.generate, isGenerating && styles.disabled]} onPress={onGenerate}>
+      <TouchableOpacity disabled={isGenerating} style={[styles.generate, isGenerating && styles.disabled]} onPress={async ()=>{
+        await onGenerate()
+        console.log("on Generate Done")
+        }}>
         <Text style={styles.generateText}>
           {isGenerating ? "Generating Paper" : "Generate Paper"}
         </Text>
