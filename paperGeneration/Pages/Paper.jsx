@@ -5,6 +5,7 @@ import QuestionOptions from "./QuestionOptions";
 import { paperServices } from "../Services/PaperGenerationServices";
 import { useSelector } from "react-redux";
 import { selectPaper } from "../redux/PaperSlice";
+import QuestionAddEdit from "./QuestionAddEdit";
 
 const Paper = ({ navigation, route, ...props }) => {
   const logo = require("../assets/COMSATS.jpg");
@@ -12,10 +13,68 @@ const Paper = ({ navigation, route, ...props }) => {
   const [paperResponse, setPaperResponse] = useState(route?.params?.paper || {})
   const [institute, setInstituteLocal] = useState(route?.params?.institute || {})
   const [replacedQuestions, setReplacedQuestions] = useState([]);
+  const [modalData, setModalData] = useState({});
+  const [qPos, setQPos] = useState({})
+  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
-    console.log()
-  }, [institute])
+    console.log("modalData", modalData)
+    console.log("qPos", qPos)
+  }, [modalData])
+  const sendForApproval = useCallback(() => {
+    paperServices.approveQuestion(
+      paper?.classLevelId,
+      paper?.classLevelName,
+      paper?.subjectId,
+      modalData?.Chapter,
+      modalData?.statement,
+      modalData?.type,
+      modalData?._id
+    ).then((result) => {
+      console.log(result, "approval success")
+    }).catch((error) => {
+      console.log(error, "approval error")
+    }).finally(() => setOpen(false))
+  })
+  const onAddQuestion = useCallback((q, secInd, qInd) => {
+    console.log(q)
+    setModalData({ ...q })
+    setQPos({ ...qPos, secInd, qInd, isEdit: false })
+    setOpen(true)
+  });
+  const onEdit = useCallback((q, secInd, qInd) => {
+    setModalData({ ...q })
+    setQPos({ ...qPos, secInd, qInd, isEdit: true })
+    setOpen(true)
+  });
+
+  const onSubmitAdd = useCallback(() => {
+    // console.log("on submit add", modalData)
+    sendForApproval();
+    // Also Add in local
+    let paperCopy = { ...paperResponse }
+    if (modalData?.type === 'short') {
+      paperCopy.shortQuestions[qPos?.secInd].questions?.push(modalData)
+      setPaperResponse(paperCopy)
+    }
+    if (modalData?.type === 'long') {
+      paperCopy.longQuestions[qPos?.secInd].questions?.push(modalData)
+      setPaperResponse(paperCopy)
+    }
+    setOpen(false)
+  })
+  const onSubmitEdit = useCallback(() => {
+    // console.log("on submit edit", modalData)
+    sendForApproval();
+    // Also edit in local
+    if (modalData?.type === 'short' && qPos?.secInd >= 0, qPos?.qInd >= 0) {
+      console.log(qPos?.secInd, qPos?.qInd)
+      paperResponse.shortQuestions[qPos?.secInd].questions[qPos?.qInd] = modalData
+    }
+    if (modalData?.type === 'long' && qPos?.secInd >= 0, qPos?.qInd >= 0) {
+      // paperResponse.longQuestions[qPos?.secInd].questions[qPos?.qInd] = modalData
+    }
+  })
   const onDeleteQ = useCallback((secInd, qInd) => {
     // console.log(secInd, qInd)
     let arr = { ...paperResponse }
@@ -72,6 +131,15 @@ const Paper = ({ navigation, route, ...props }) => {
   return (
     // <View style={styles.viewer}>
     <View style={styles.container}>
+      <QuestionAddEdit
+        open={open}
+        data={modalData}
+        isEdit={qPos.isEdit ?? false}
+        onChangeData={setModalData}
+        handleClose={() => setOpen(false)}
+        handleOpen={() => setOpen(true)}
+        onSubmit={qPos.isEdit ? onSubmitEdit : onSubmitAdd}
+      />
       <View style={styles.header_main_view}>
         <View style={styles.logo_n_head_view}>
           <View style={styles.logo_view}>
@@ -135,8 +203,12 @@ const Paper = ({ navigation, route, ...props }) => {
                         </View>
                         <QuestionOptions
                           onDeleteQ={() => { onDeleteQ(index, i) }}
-                          onReplaceData={{index, i, q_id: q?._id, type: 'short'}}
+                          onReplaceData={{ index, i, q_id: q?._id, type: 'short' }}
                           onReplace={onReplace}
+                          onEdit={()=>{
+                            onEdit(q, index, i, q?.Chapter)
+                            setOpen(true)
+                          }}
                         />
                       </View>
                     ))}

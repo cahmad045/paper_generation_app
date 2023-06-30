@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import QuestionAddEdit from './QuestionAddEdit';
 
 const QuestionOptions = ({
     onDeleteQ = () => { },
@@ -13,7 +14,7 @@ const QuestionOptions = ({
 
 }) => {
     const [isActive, setIsActive] = useState(false)
-    const {index, i, q_id, type} = onReplaceData
+    const { index, i, q_id, type } = onReplaceData
     return (
         <>
             <Pressable
@@ -55,6 +56,10 @@ const QuestionOptions = ({
                     <Pressable
                         pressRetentionOffset={150}
                         android_ripple={{ color: '#d14843', borderless: true }}
+                        onPress={()=>{
+                            onEdit()
+                            setIsActive(false)
+                        }}
                     >
                         <Feather name="edit" size={24} color="green" />
                     </Pressable>

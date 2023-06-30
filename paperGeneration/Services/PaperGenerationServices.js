@@ -104,11 +104,22 @@ class PaperGenerationServices extends GenericServices {
     formData.append("chapterId", chapterId);
     formData.append("questionStatement", questionStatement);
     formData.append("questionType", questionType);
-    if (originalQuestionId)
+
+    let body = {
+      classLevelId,
+      classLevelName,
+      subjectId,
+      chapterId,
+      questionStatement,
+      questionType,
+    }
+    if (originalQuestionId) {
       formData.append("questionId", originalQuestionId);
+      body.questionId = originalQuestionId
+    }
 
     return new Promise((resolve, reject) => {
-      this.post(links.approvalNew, formData)
+      this.post(links.approvalNew, body)
         .then(data => resolve(data))
         .catch(error => reject(error))
     })
