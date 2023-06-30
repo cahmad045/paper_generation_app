@@ -6,6 +6,7 @@ import { paperServices } from "../Services/PaperGenerationServices";
 import { useSelector } from "react-redux";
 import { selectPaper } from "../redux/PaperSlice";
 import QuestionAddEdit from "./QuestionAddEdit";
+import { AntDesign } from '@expo/vector-icons';
 
 const Paper = ({ navigation, route, ...props }) => {
   const logo = require("../assets/COMSATS.jpg");
@@ -38,7 +39,11 @@ const Paper = ({ navigation, route, ...props }) => {
   })
   const onAddQuestion = useCallback((q, secInd, qInd) => {
     console.log(q)
-    setModalData({ ...q })
+    let obj = { ...q }
+    if (paper?.totalCh && paper?.totalCh[0]) {
+      obj.Chapter = paper?.totalCh[0]?.chapterId
+    }
+    setModalData({ ...obj })
     setQPos({ ...qPos, secInd, qInd, isEdit: false })
     setOpen(true)
   });
@@ -188,6 +193,13 @@ const Paper = ({ navigation, route, ...props }) => {
                       <Text style={styles.question_heading}>
                         Q {index + 1}: Attempt {sq.attempt} question(s)
                       </Text>
+                      <Pressable
+                        pressRetentionOffset={50}
+                        android_ripple={{ color: '#d14843', borderless: true }}
+                        onPress={() => onAddQuestion({ type: 'short' }, index)}
+                      >
+                        <AntDesign name="pluscircleo" size={24} color="black" />
+                      </Pressable>
                       <Text style={styles.question_heading}>
                         Marks: {sq?.marks} x {sq?.attempt} = {sq?.marks * sq?.attempt}
                       </Text>
@@ -205,7 +217,7 @@ const Paper = ({ navigation, route, ...props }) => {
                           onDeleteQ={() => { onDeleteQ(index, i) }}
                           onReplaceData={{ index, i, q_id: q?._id, type: 'short' }}
                           onReplace={onReplace}
-                          onEdit={()=>{
+                          onEdit={() => {
                             onEdit(q, index, i, q?.Chapter)
                             setOpen(true)
                           }}
@@ -227,6 +239,13 @@ const Paper = ({ navigation, route, ...props }) => {
                       <Text style={styles.question_heading}>
                         Q {index + 1}: Attempt {sq.attempt} question(s)
                       </Text>
+                      <Pressable
+                        pressRetentionOffset={50}
+                        android_ripple={{ color: '#d14843', borderless: true }}
+                        onPress={() => onAddQuestion({ type: 'short' }, index)}
+                      >
+                        <AntDesign name="pluscircleo" size={24} color="black" />
+                      </Pressable>
                       <Text style={styles.question_heading}>
                         Marks: {sq?.marks} x {sq?.attempt} = {sq?.marks * sq?.attempt}
                       </Text>
