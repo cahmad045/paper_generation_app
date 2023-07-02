@@ -21,8 +21,12 @@ const SignIn = ({ navigation }) => {
     console.log("Sign in successfully.");
     authServices.login(email, password)
       .then(res => {
-        dispatch(updateUser({ ...res?.user, isLoggedIn: true }))
-        toast("Logged In")
+        if(res?.user?.isAdmin === false){
+          dispatch(updateUser({ ...res?.user, isLoggedIn: true }))
+          toast("Logged In")
+        }else{
+          toast("Login Failed - Not a user")
+        }
         // navigation.navigate("Home");
       })
       .catch((error) => {
