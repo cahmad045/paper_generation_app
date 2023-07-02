@@ -1,18 +1,23 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
 
-const NavList = () => {
+const NavList = ({ navigation }) => {
   const handleButtonPress = (page) => {
     // Handle button press and navigate to the selected page
     console.log(`Navigating to ${page}`);
   };
+
+  const handleProfile = () => {
+    // Handle button press and navigate to the selected page
+    navigation.navigate("UserProfile");
+    // props.handleProp();
+    console.log("profile");
+  };
+
   return (
     <View style={styles.listContainer}>
-      <TouchableOpacity
-        onPress={() => handleButtonPress("Page 1")}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Page 1</Text>
+      <TouchableOpacity onPress={handleProfile} style={styles.button}>
+        <Text style={styles.buttonText}>Profile</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => handleButtonPress("Page 2")}

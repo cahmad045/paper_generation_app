@@ -11,40 +11,42 @@ import { selectPaper } from "../redux/PaperSlice";
 // import NavigationBar from "react-native-navbar";
 
 const Home = ({ navigation }) => {
-  const user = useSelector(selectUser)
-  const paper = useSelector(selectPaper)
-  const dispatch = useDispatch()
+  const user = useSelector(selectUser);
+  const paper = useSelector(selectPaper);
+  const dispatch = useDispatch();
   useEffect(() => {
-    console.log(user.isLoggedIn, "user state home jsx")
-  }, [user])
+    console.log(user.isLoggedIn, "user state home jsx");
+  }, [user]);
   useEffect(() => {
     // console.log(JSON.stringify(paper), "paper state home jsx")
-  }, [paper])
+  }, [paper]);
   useEffect(() => {
-    authServices.login("user@gmail.com", "1234567890")
-      .then(res => {
-        dispatch(updateUser({ ...res?.user, isLoggedIn: true }))
-      })
-  }, [])
+    authServices.login("user@gmail.com", "1234567890").then((res) => {
+      dispatch(updateUser({ ...res?.user, isLoggedIn: true }));
+    });
+  }, []);
   const handlePaperGneration = () => {
     navigation.navigate("ClassSelection");
   };
 
   const handleAIgeneration = () => {
-    navigation.navigate("AIGnerationCriteria");
+    navigation.navigate("UserProfile");
   };
+
   return (
     <View style={styles.container}>
       {/* <Navbar /> */}
-      <TestingNav />
+      <TestingNav navigation={navigation} />
       <Slider />
-      <Text>{user.isLoggedIn && user.token ? "Logged In" : "Login Required"}</Text>
-      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+      <Text>
+        {user.isLoggedIn && user.token ? "Logged In" : "Login Required"}
+      </Text>
+      <View style={{ flexDirection: "row", justifyContent: "center" }}>
         <View style={styles.buttonStyle}>
           <ButtonDesign
             buttonText="Logout"
-            onPress={()=>{
-              dispatch(updateUser({}))
+            onPress={() => {
+              dispatch(updateUser({}));
             }}
             buttonWidth={150}
             buttonHeight={100}
@@ -58,7 +60,6 @@ const Home = ({ navigation }) => {
             buttonHeight={100}
           />
         </View>
-
       </View>
       <View style={styles.buttonContainer}>
         <View style={styles.buttonStyle}>
@@ -102,7 +103,5 @@ const styles = StyleSheet.create({
     margin: 10,
     // color: "red",
   },
-  smallSuttonStyle: {
-
-  }
+  smallSuttonStyle: {},
 });

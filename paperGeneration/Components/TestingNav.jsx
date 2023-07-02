@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import NavList from "./NavList";
 
-const TestingNav = () => {
+const TestingNav = ({ navigation }) => {
   const [isListVisible, setListVisible] = useState(false);
 
   const handleIconPress = () => {
     setListVisible(!isListVisible);
   };
+
+  // const handleProp = () =>{
+  //   props.navigationProp();
+  // }
 
   //   const handleButtonPress = (page) => {
   //     // Handle button press and navigate to the selected page
@@ -21,7 +25,8 @@ const TestingNav = () => {
         <View style={styles.icon}></View>
         <View style={styles.icon}></View>
       </TouchableOpacity>
-      {isListVisible && <NavList />}
+      {/* {isListVisible && <NavList handleProp={handleProp}/>} */}
+      {isListVisible && <NavList navigation={navigation} />}
     </View>
   );
 };
