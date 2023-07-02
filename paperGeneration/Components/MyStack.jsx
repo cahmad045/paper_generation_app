@@ -11,12 +11,16 @@ import SubjectSelection from "../Pages/SubjectSelection";
 import PaperCriteria from "../Pages/PaperCriteria";
 import AIGenerationCriteria from "../Pages/AIGenerationCriteria";
 import Paper from "../Pages/Paper";
+import SignIn from "../Pages/SignIn";
+import SignUp from "../Pages/SignUp";
 
 const Stack = createNativeStackNavigator();
 const MyStack = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen
           name="Home"
           component={Home}
