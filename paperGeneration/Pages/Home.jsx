@@ -39,6 +39,27 @@ const Home = ({ navigation }) => {
       <TestingNav />
       <Slider />
       <Text>{user.isLoggedIn && user.token ? "Logged In" : "Login Required"}</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <View style={styles.buttonStyle}>
+          <ButtonDesign
+            buttonText="Logout"
+            onPress={()=>{
+              dispatch(updateUser({}))
+            }}
+            buttonWidth={150}
+            buttonHeight={100}
+          />
+        </View>
+        <View style={styles.buttonStyle}>
+          <ButtonDesign
+            buttonText="Profile"
+            // onPress={handlePaperGneration}
+            buttonWidth={150}
+            buttonHeight={100}
+          />
+        </View>
+
+      </View>
       <View style={styles.buttonContainer}>
         <View style={styles.buttonStyle}>
           <ButtonDesign
@@ -81,4 +102,7 @@ const styles = StyleSheet.create({
     margin: 10,
     // color: "red",
   },
+  smallSuttonStyle: {
+
+  }
 });

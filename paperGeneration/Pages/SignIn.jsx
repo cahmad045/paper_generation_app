@@ -1,21 +1,35 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   TextInput,
   TouchableOpacity,
   Text,
   StyleSheet,
+  ToastAndroid,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { authServices } from "../Services/AuthServices";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser, updateUser } from "../redux/userSlice";
+import { toast } from "../App";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleSignIn = () => {
-    navigation.navigate("Home");
+  const user = useSelector(selectUser)
+  const handleSignIn = useCallback(() => {
     console.log("Sign in successfully.");
-  };
+    authServices.login(email, password)
+      .then(res => {
+        dispatch(updateUser({ ...res?.user, isLoggedIn: true }))
+        toast("Logged In")
+        // navigation.navigate("Home");
+      })
+      .catch((error) => {
+        console.log(error, "login")
+        toast(`Login Failed ${error?.status}`)
+      })
+  }, [email, password])
 
   const handleForgotPassword = () => {
     console.log("Handle forgot password");
@@ -24,7 +38,11 @@ const SignIn = ({ navigation }) => {
   const handleCreateAccount = () => {
     navigation.navigate("SignUp");
   };
-
+  const dispatch = useDispatch()
+  useEffect(() => {
+    console.log(user.isLoggedIn, "user state home jsx")
+  }, [user])
+  // useEffect(, [])
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>

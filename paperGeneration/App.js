@@ -16,7 +16,12 @@ export default function App() {
     </Provider>
   );
 }
-
+export const toast = (msg) => {
+  ToastAndroid.showWithGravity(
+    msg || 'Toast',
+    ToastAndroid.SHORT,
+    ToastAndroid.CENTER,)
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

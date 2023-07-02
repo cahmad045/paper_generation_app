@@ -13,27 +13,38 @@ import AIGenerationCriteria from "../Pages/AIGenerationCriteria";
 import Paper from "../Pages/Paper";
 import SignIn from "../Pages/SignIn";
 import SignUp from "../Pages/SignUp";
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/userSlice";
 
 const Stack = createNativeStackNavigator();
 const MyStack = () => {
+  const user = useSelector(selectUser)
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          //   options={{ title: "Welcome" }}
-        />
-        <Stack.Screen name="ClassSelection" component={ClassSelection} />
-        <Stack.Screen name="SubjectSelection" component={SubjectSelection} />
-        <Stack.Screen name="PaperCriteria" component={PaperCriteria} />
-        <Stack.Screen
-          name="AIGnerationCriteria"
-          component={AIGenerationCriteria}
-        />
-        <Stack.Screen name="Paper" component={Paper} />
+        {!user.isLoggedIn &&
+          <>
+            <Stack.Screen name="SignIn" component={SignIn} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+          </>
+        }
+        {user.isLoggedIn &&
+          <>
+            <Stack.Screen
+              name="Home"
+              component={Home}
+            //   options={{ title: "Welcome" }}
+            />
+            <Stack.Screen name="ClassSelection" component={ClassSelection} />
+            <Stack.Screen name="SubjectSelection" component={SubjectSelection} />
+            <Stack.Screen name="PaperCriteria" component={PaperCriteria} />
+            <Stack.Screen
+              name="AIGnerationCriteria"
+              component={AIGenerationCriteria}
+            />
+            <Stack.Screen name="Paper" component={Paper} />
+          </>
+        }
       </Stack.Navigator>
     </NavigationContainer>
   );
