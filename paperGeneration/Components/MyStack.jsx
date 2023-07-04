@@ -18,6 +18,7 @@ import { selectUser } from "../redux/userSlice";
 import UserProfile from "../Pages/UserProfile";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SplashScreen from "../Pages/SplashScreen";
+import PdfGeneration from "../Pages/PdfGeneration";
 
 const Stack = createNativeStackNavigator();
 const MyStack = () => {
@@ -60,11 +61,12 @@ const MyStack = () => {
             />
             <Stack.Screen name="PaperCriteria" component={PaperCriteria} />
             <Stack.Screen
-              name="AIGnerationCriteria"
+              name="AIGenerationCriteria"
               component={AIGenerationCriteria}
             />
             <Stack.Screen name="Paper" component={Paper} />
             <Stack.Screen name="UserProfile" component={UserProfile} />
+            <Stack.Screen name="PdfGeneration" component={PdfGeneration} />
           </>
         )}
       </Stack.Navigator>
