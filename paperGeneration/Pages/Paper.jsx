@@ -1,138 +1,258 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, Image, ScrollView, StyleSheet, Pressable } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import * as Print from "expo-print";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+  Button,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import QuestionOptions from "./QuestionOptions";
 import { paperServices } from "../Services/PaperGenerationServices";
 import { useSelector } from "react-redux";
 import { selectPaper } from "../redux/PaperSlice";
 import QuestionAddEdit from "./QuestionAddEdit";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
+import ImagePicker from 'react-native-image-picker';
+
 
 const Paper = ({ navigation, route, ...props }) => {
   const logo = require("../assets/COMSATS.jpg");
-  const paper = useSelector(selectPaper)
-  const [paperResponse, setPaperResponse] = useState(route?.params?.paper || {})
-  const [institute, setInstituteLocal] = useState(route?.params?.institute || {})
+  const paper = useSelector(selectPaper);
+  const [paperResponse, setPaperResponse] = useState(
+    route?.params?.paper || {}
+  );
+  const [institute, setInstituteLocal] = useState(
+    route?.params?.institute || {}
+  );
   const [replacedQuestions, setReplacedQuestions] = useState([]);
   const [modalData, setModalData] = useState({});
-  const [qPos, setQPos] = useState({})
+  const [qPos, setQPos] = useState({});
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
-    console.log("modalData", modalData)
-    console.log("qPos", qPos)
-  }, [modalData])
+    console.log("modalData", modalData);
+    console.log("qPos", qPos);
+  }, [modalData]);
   const sendForApproval = useCallback(() => {
-    paperServices.approveQuestion(
-      paper?.classLevelId,
-      paper?.classLevelName,
-      paper?.subjectId,
-      modalData?.Chapter,
-      modalData?.statement,
-      modalData?.type,
-      modalData?._id
-    ).then((result) => {
-      console.log(result, "approval success")
-    }).catch((error) => {
-      console.log(error, "approval error")
-    }).finally(() => setOpen(false))
-  })
+    paperServices
+      .approveQuestion(
+        paper?.classLevelId,
+        paper?.classLevelName,
+        paper?.subjectId,
+        modalData?.Chapter,
+        modalData?.statement,
+        modalData?.type,
+        modalData?._id
+      )
+      .then((result) => {
+        console.log(result, "approval success");
+      })
+      .catch((error) => {
+        console.log(error, "approval error");
+      })
+      .finally(() => setOpen(false));
+  });
   const onAddQuestion = useCallback((q, secInd, qInd) => {
-    console.log(q)
-    let obj = { ...q }
+    console.log(q);
+    let obj = { ...q };
     if (paper?.totalCh && paper?.totalCh[0]) {
-      obj.Chapter = paper?.totalCh[0]?.chapterId
+      obj.Chapter = paper?.totalCh[0]?.chapterId;
     }
-    setModalData({ ...obj })
-    setQPos({ ...qPos, secInd, qInd, isEdit: false })
-    setOpen(true)
+    setModalData({ ...obj });
+    setQPos({ ...qPos, secInd, qInd, isEdit: false });
+    setOpen(true);
   });
   const onEdit = useCallback((q, secInd, qInd) => {
-    setModalData({ ...q })
-    setQPos({ ...qPos, secInd, qInd, isEdit: true })
-    setOpen(true)
+    setModalData({ ...q });
+    setQPos({ ...qPos, secInd, qInd, isEdit: true });
+    setOpen(true);
   });
 
   const onSubmitAdd = useCallback(() => {
     // console.log("on submit add", modalData)
     sendForApproval();
     // Also Add in local
-    let paperCopy = { ...paperResponse }
-    if (modalData?.type === 'short') {
-      paperCopy.shortQuestions[qPos?.secInd].questions?.push(modalData)
-      setPaperResponse(paperCopy)
+    let paperCopy = { ...paperResponse };
+    if (modalData?.type === "short") {
+      paperCopy.shortQuestions[qPos?.secInd].questions?.push(modalData);
+      setPaperResponse(paperCopy);
     }
-    if (modalData?.type === 'long') {
-      paperCopy.longQuestions[qPos?.secInd].questions?.push(modalData)
-      setPaperResponse(paperCopy)
+    if (modalData?.type === "long") {
+      paperCopy.longQuestions[qPos?.secInd].questions?.push(modalData);
+      setPaperResponse(paperCopy);
     }
-    setOpen(false)
-  })
+    setOpen(false);
+  });
   const onSubmitEdit = useCallback(() => {
     // console.log("on submit edit", modalData)
     sendForApproval();
     // Also edit in local
-    if (modalData?.type === 'short' && qPos?.secInd >= 0, qPos?.qInd >= 0) {
-      console.log(qPos?.secInd, qPos?.qInd)
-      paperResponse.shortQuestions[qPos?.secInd].questions[qPos?.qInd] = modalData
+    if ((modalData?.type === "short" && qPos?.secInd >= 0, qPos?.qInd >= 0)) {
+      console.log(qPos?.secInd, qPos?.qInd);
+      paperResponse.shortQuestions[qPos?.secInd].questions[qPos?.qInd] =
+        modalData;
     }
-    if (modalData?.type === 'long' && qPos?.secInd >= 0, qPos?.qInd >= 0) {
+    if ((modalData?.type === "long" && qPos?.secInd >= 0, qPos?.qInd >= 0)) {
       // paperResponse.longQuestions[qPos?.secInd].questions[qPos?.qInd] = modalData
     }
-  })
+  });
   const onDeleteQ = useCallback((secInd, qInd) => {
     // console.log(secInd, qInd)
-    let arr = { ...paperResponse }
-    arr.shortQuestions[secInd].questions?.splice(qInd, 1)
+    let arr = { ...paperResponse };
+    arr.shortQuestions[secInd].questions?.splice(qInd, 1);
     setPaperResponse(arr);
-  })
+  });
   const onDeleteLQ = useCallback((secInd, qInd) => {
     // console.log(secInd, qInd)
-    let arr = { ...paperResponse }
-    arr.longQuestions[secInd].questions?.splice(qInd, 1)
+    let arr = { ...paperResponse };
+    arr.longQuestions[secInd].questions?.splice(qInd, 1);
     setPaperResponse(arr);
-  })
-  const onReplaceSuccess = useCallback((secindex, qIndex, toBeReplacedId, type, newQuestion) => {
-    if (type === 'short') paperResponse.shortQuestions[secindex].questions[qIndex] = newQuestion
-    if (type === 'long') paperResponse.longQuestions[secindex].questions[qIndex] = newQuestion
-    if (!replacedQuestions.indexOf(toBeReplacedId) >= 0)
-      setReplacedQuestions([...replacedQuestions, toBeReplacedId])
-  })
-  const onReplace = useCallback(async (secindex, qIndex, toBeReplacedId, type) => {
-    // console.log({ secindex, qIndex, type })
-    let chapterIds = [];
-    let prevQuestions = [];
-    // console.log({ secindex, qIndex, toBeReplacedId, type })
-    if (type === 'short') {
-      chapterIds = [...paperResponse?.shortQuestions[secindex].chapters];
-      paperResponse?.shortQuestions[secindex]?.questions?.map((q, i) => {
-        prevQuestions.push(q?._id)
-      })
+  });
+  const onReplaceSuccess = useCallback(
+    (secindex, qIndex, toBeReplacedId, type, newQuestion) => {
+      if (type === "short")
+        paperResponse.shortQuestions[secindex].questions[qIndex] = newQuestion;
+      if (type === "long")
+        paperResponse.longQuestions[secindex].questions[qIndex] = newQuestion;
+      if (!replacedQuestions.indexOf(toBeReplacedId) >= 0)
+        setReplacedQuestions([...replacedQuestions, toBeReplacedId]);
     }
-    else if (type === "long") {
-      chapterIds = paperResponse?.longQuestions[secindex].chapters;
-      paperResponse?.longQuestions[secindex]?.questions?.map((q, i) => {
-        prevQuestions.push(q?._id)
-      })
-    }
-
-    if (type === "long" || type === "short") {
-      if (replacedQuestions?.indexOf(toBeReplacedId) === -1) {
-        // console.log("Replacing")
-        await paperServices.replaceQuestion(paper?.classLevelId, paper?.subjectId, chapterIds, [...replacedQuestions, ...prevQuestions])
-          .then(result => {
-            console.log("replaced")
-            console.log(result, "replace success", toBeReplacedId)
-            onReplaceSuccess(secindex, qIndex, toBeReplacedId, type, result?.question)
-          })
-          .catch(error => {
-            console.log(error, "replace error", toBeReplacedId)
-          })
-        console.log("Replaced: ", replacedQuestions?.indexOf(toBeReplacedId), replacedQuestions)
+  );
+  const onReplace = useCallback(
+    async (secindex, qIndex, toBeReplacedId, type) => {
+      // console.log({ secindex, qIndex, type })
+      let chapterIds = [];
+      let prevQuestions = [];
+      // console.log({ secindex, qIndex, toBeReplacedId, type })
+      if (type === "short") {
+        chapterIds = [...paperResponse?.shortQuestions[secindex].chapters];
+        paperResponse?.shortQuestions[secindex]?.questions?.map((q, i) => {
+          prevQuestions.push(q?._id);
+        });
+      } else if (type === "long") {
+        chapterIds = paperResponse?.longQuestions[secindex].chapters;
+        paperResponse?.longQuestions[secindex]?.questions?.map((q, i) => {
+          prevQuestions.push(q?._id);
+        });
       }
-      else console.log("Not Replaced: ", replacedQuestions?.indexOf(toBeReplacedId), replacedQuestions)
+
+      if (type === "long" || type === "short") {
+        if (replacedQuestions?.indexOf(toBeReplacedId) === -1) {
+          // console.log("Replacing")
+          await paperServices
+            .replaceQuestion(
+              paper?.classLevelId,
+              paper?.subjectId,
+              chapterIds,
+              [...replacedQuestions, ...prevQuestions]
+            )
+            .then((result) => {
+              console.log("replaced");
+              console.log(result, "replace success", toBeReplacedId);
+              onReplaceSuccess(
+                secindex,
+                qIndex,
+                toBeReplacedId,
+                type,
+                result?.question
+              );
+            })
+            .catch((error) => {
+              console.log(error, "replace error", toBeReplacedId);
+            });
+          console.log(
+            "Replaced: ",
+            replacedQuestions?.indexOf(toBeReplacedId),
+            replacedQuestions
+          );
+        } else
+          console.log(
+            "Not Replaced: ",
+            replacedQuestions?.indexOf(toBeReplacedId),
+            replacedQuestions
+          );
+      }
     }
-  })
+  );
+
+  const test = "ggg";
+  const html = `
+  <html>
+  <head>
+      <meta http-equiv="content-type" content="text/html; charset=windows-1252"/>
+      <title>DIN A4 Page</title>
+      <style type="text/css">
+          @page { size: 21cm 29.7cm; margin: 2cm }
+          p { line-height: 120%; text-align: justify; background: transparent }
+      </style>
+  </head>
+  <body>
+  <div>
+
+
+  <div>
+  <h2 style="display: flex;justify-content: center;align-items: center;">Punjab group of collages</h2><br/>
+  
+  <div style="text-align: center;">
+  <h4 style="display: inline-block;margin-right: 20px;">Subject:${paperResponse?.subjectName?.toUpperCase()}</h4>
+  <h4 style="display: inline-block;">Class: ${paperResponse?.classLevelName?.toUpperCase()}</h4>
+  </div>
+
+  <div style="text-align: center;">
+  <h4 style="display: inline-block;margin-right: 20px;">Name:......................</h4>
+  <h4 style="display: inline-block;">Roll No:......................</h4><br/>
+  </div>
+  </div>
+  </div>
+  
+  <hr/>
+  <p>Q1: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+  eiusmod tempor
+  </p>
+  <p>Q2: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+  eiusmod tempor
+  </p>
+  <p>Q3: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+  eiusmod tempor
+  </p>
+    
+  <p>
+    ${test}
+  </p>
+  </body>
+  </html>
+  `;
+  const [selectedPrinter, setSelectedPrinter] = React.useState();
+
+  const print = async () => {
+    // On iOS/android prints the given html. On web prints the HTML from the current page.
+    await Print.printAsync({
+      html,
+      //   printerUrl: selectedPrinter?.url, // iOS only
+    });
+  };
+
+  const printToFile = async () => {
+    // On iOS/android prints the given html. On web prints the HTML from the current page.
+    const { uri } = await Print.printToFileAsync({ html });
+    console.log("File has been saved to:", uri);
+    await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
+  };
+
+  //   const selectPrinter = async () => {
+  //     const printer = await Print.selectPrinterAsync(); // iOS only
+  //     setSelectedPrinter(printer);
+  //   };
+  // const onPdfGenerate = async () => {
+  //   navigation.navigate("PdfGeneration");
+  // };
+
+  
   return (
     // <View style={styles.viewer}>
     <View style={styles.container}>
@@ -145,14 +265,46 @@ const Paper = ({ navigation, route, ...props }) => {
         handleOpen={() => setOpen(true)}
         onSubmit={qPos.isEdit ? onSubmitEdit : onSubmitAdd}
       />
+       {/* <div
+                className="image-container"
+                onClick={handleImageContainerClick}
+                 >
+                <img
+                  className="paper-logo"
+                  src={institute.instituteLogo}
+                  alt="Selected Image"
+                />
+                  <div
+                  className="overlay"
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
+                  <i>
+                    <FaCamera />
+                  </i>
+                  <input
+                    type="file"
+                    id="photo-input"
+                    ref={photoInputRef}
+                    style={{ display: "none" }}
+                    onChange={handlePhotoInputChange}
+                  />
+                </div>
+              </div> */}
       <View style={styles.header_main_view}>
         <View style={styles.logo_n_head_view}>
+          
           <View style={styles.logo_view}>
+          <TouchableOpacity>
+          <Text style={{marginLeft:20}}>upload</Text>
             <Image
               resizeMode="contain"
               source={{ uri: institute.instituteLogo }}
               style={styles.logo}
             />
+            
+            </TouchableOpacity>
           </View>
           <View style={styles.head_view}>
             <View style={{ alignSelf: "flex-end" }}>
@@ -160,8 +312,12 @@ const Paper = ({ navigation, route, ...props }) => {
             </View>
             <View style={styles.head_text_view}>
               <Text style={styles.text_heading}>{institute.instituteName}</Text>
-              <Text style={styles.text_sub_heading}>Class:{paperResponse?.classLevelName?.toUpperCase()}</Text>
-              <Text style={styles.text_sub_heading}>Subject:{paperResponse?.subjectName?.toUpperCase()}</Text>
+              <Text style={styles.text_sub_heading}>
+                Class:{paperResponse?.classLevelName?.toUpperCase()}
+              </Text>
+              <Text style={styles.text_sub_heading}>
+                Subject:{paperResponse?.subjectName?.toUpperCase()}
+              </Text>
               <Text style={styles.text_sub_heading}>Name:</Text>
               <Text style={styles.text_sub_heading}>Date:</Text>
               <Text style={styles.text_sub_heading}>Roll No:</Text>
@@ -181,10 +337,10 @@ const Paper = ({ navigation, route, ...props }) => {
         <View
           style={[
             styles.section_main_scrollview,
-            { borderColor: "yellow", height: "80%", paddingBottom: 20, },
+            { borderColor: "yellow", height: "80%", paddingBottom: 20 },
           ]}
         >
-          {paperResponse?.isShort &&
+          {paperResponse?.isShort && (
             <>
               {paperResponse?.shortQuestions?.map((sq, index) => (
                 <>
@@ -195,31 +351,40 @@ const Paper = ({ navigation, route, ...props }) => {
                       </Text>
                       <Pressable
                         pressRetentionOffset={50}
-                        android_ripple={{ color: '#d14843', borderless: true }}
-                        onPress={() => onAddQuestion({ type: 'short' }, index)}
+                        android_ripple={{ color: "#d14843", borderless: true }}
+                        onPress={() => onAddQuestion({ type: "short" }, index)}
                       >
                         <AntDesign name="pluscircleo" size={24} color="black" />
                       </Pressable>
                       <Text style={styles.question_heading}>
-                        Marks: {sq?.marks} x {sq?.attempt} = {sq?.marks * sq?.attempt}
+                        Marks: {sq?.marks} x {sq?.attempt} ={" "}
+                        {sq?.marks * sq?.attempt}
                       </Text>
                     </View>
                   </View>
                   <View style={styles.questions_container}>
-
                     {sq?.questions?.map((q, i) => (
                       <View key={i} style={styles.question_view}>
                         <View style={styles.question}>
                           {/* <Text>{i + 1}. </Text> */}
-                          <Text>{i + 1}. {q?.statement}</Text>
+                          <Text>
+                            {i + 1}. {q?.statement}
+                          </Text>
                         </View>
                         <QuestionOptions
-                          onDeleteQ={() => { onDeleteQ(index, i) }}
-                          onReplaceData={{ index, i, q_id: q?._id, type: 'short' }}
+                          onDeleteQ={() => {
+                            onDeleteQ(index, i);
+                          }}
+                          onReplaceData={{
+                            index,
+                            i,
+                            q_id: q?._id,
+                            type: "short",
+                          }}
                           onReplace={onReplace}
                           onEdit={() => {
-                            onEdit(q, index, i, q?.Chapter)
-                            setOpen(true)
+                            onEdit(q, index, i, q?.Chapter);
+                            setOpen(true);
                           }}
                         />
                       </View>
@@ -228,10 +393,19 @@ const Paper = ({ navigation, route, ...props }) => {
                 </>
               ))}
             </>
-          }
-          {paperResponse?.isLong &&
+          )}
+          {paperResponse?.isLong && (
             <>
-              <Text style={{ alignSelf: "center", marginTop: 8, fontFamily: 'Times New Roman Bold', fontWeight: 'bold' }}>Long Questions</Text>
+              <Text
+                style={{
+                  alignSelf: "center",
+                  marginTop: 8,
+                  fontFamily: "Times New Roman Bold",
+                  fontWeight: "bold",
+                }}
+              >
+                Long Questions
+              </Text>
               {paperResponse?.longQuestions?.map((sq, index) => (
                 <>
                   <View key={index} style={styles.section_main_view}>
@@ -241,31 +415,40 @@ const Paper = ({ navigation, route, ...props }) => {
                       </Text>
                       <Pressable
                         pressRetentionOffset={50}
-                        android_ripple={{ color: '#d14843', borderless: true }}
-                        onPress={() => onAddQuestion({ type: 'long' }, index)}
+                        android_ripple={{ color: "#d14843", borderless: true }}
+                        onPress={() => onAddQuestion({ type: "long" }, index)}
                       >
                         <AntDesign name="pluscircleo" size={24} color="black" />
                       </Pressable>
                       <Text style={styles.question_heading}>
-                        Marks: {sq?.marks} x {sq?.attempt} = {sq?.marks * sq?.attempt}
+                        Marks: {sq?.marks} x {sq?.attempt} ={" "}
+                        {sq?.marks * sq?.attempt}
                       </Text>
                     </View>
                   </View>
                   <View style={styles.questions_container}>
-
                     {sq?.questions?.map((q, i) => (
                       <View key={i} style={styles.question_view}>
                         <View style={styles.question}>
                           {/* <Text>{i + 1}. </Text> */}
-                          <Text>{i + 1}. {q?.statement}</Text>
+                          <Text>
+                            {i + 1}. {q?.statement}
+                          </Text>
                         </View>
                         <QuestionOptions
-                          onDeleteQ={() => { onDeleteLQ(index, i) }}
-                          onReplaceData={{ index, i, q_id: q?._id, type: 'long' }}
+                          onDeleteQ={() => {
+                            onDeleteLQ(index, i);
+                          }}
+                          onReplaceData={{
+                            index,
+                            i,
+                            q_id: q?._id,
+                            type: "long",
+                          }}
                           onReplace={onReplace}
                           onEdit={() => {
-                            onEdit(q, index, i, q?.Chapter)
-                            setOpen(true)
+                            onEdit(q, index, i, q?.Chapter);
+                            setOpen(true);
                           }}
                         />
                       </View>
@@ -274,7 +457,51 @@ const Paper = ({ navigation, route, ...props }) => {
                 </>
               ))}
             </>
-          }
+          )}
+
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "flex-end",
+              marginBottom: 20,
+              paddingHorizontal: 20,
+              marginTop: 30,
+            }}
+          >
+            {/* <TouchableOpacity
+              onPress={async () => {
+                await onPdfGenerate();
+                console.log("on Generate Done");
+              }}
+              style={{
+                backgroundColor: "blue",
+                padding: 10,
+                borderRadius: 5,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+              >
+                Generate PDF
+              </Text>
+            </TouchableOpacity> */}
+            <View style={styles.pdfBtns}>
+              <Button title="Save/Print pdf" onPress={print} />
+              <View style={styles.spacer} />
+              <Button title="Share pdf" onPress={printToFile} />
+
+              {/* <>
+          <View style={styles.spacer} />
+          <Button title="Select printer" onPress={selectPrinter} />
+          <View style={styles.spacer} />
+          {selectedPrinter ? (
+            <Text style={styles.printer}>{`Selected printer: ${selectedPrinter.name}`}</Text>
+          ) : undefined}
+        </> */}
+            </View>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -352,7 +579,6 @@ const Paper = ({ navigation, route, ...props }) => {
     // </ScrollView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -449,7 +675,7 @@ const styles = StyleSheet.create({
   question_view: {
     flexDirection: "row",
     justifyContent: "space-between",
-    position: 'relative',
+    position: "relative",
   },
   question: {
     width: "90%",
@@ -519,6 +745,19 @@ const modalStyles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+  },
+  pdfBtns: {
+    display:'flex',
+    justifyContent: 'center',
+    backgroundColor: '#ecf0f1',
+    flexDirection: 'row',
+    padding: 8,
+  },
+  spacer: {
+    height: 8,
+  },
+  printer: {
+    textAlign: 'center',
   },
 });
 

@@ -16,6 +16,7 @@ import SignUp from "../Pages/SignUp";
 import { useSelector } from "react-redux";
 import { selectUser } from "../redux/userSlice";
 import UserProfile from "../Pages/UserProfile";
+import PdfGeneration from "../Pages/PdfGeneration";
 
 const Stack = createNativeStackNavigator();
 const MyStack = () => {
@@ -48,6 +49,7 @@ const MyStack = () => {
             />
             <Stack.Screen name="Paper" component={Paper} />
             <Stack.Screen name="UserProfile" component={UserProfile} />
+            <Stack.Screen name="PdfGeneration" component={PdfGeneration} />
           </>
         )}
       </Stack.Navigator>
