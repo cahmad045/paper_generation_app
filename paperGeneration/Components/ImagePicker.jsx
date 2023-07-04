@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Button, Image, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import * as ExpoImagePicker from "expo-image-picker";
+import { paperServices } from "../Services/PaperGenerationServices";
 
-const ImagePicker = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
-
+const ImagePicker = ({
+  image,
+  imageSetter = () => { }
+}) => {
+  const [selectedImage, setSelectedImage] = useState(image);
+  const [isEdit, setIsEdit] = useState(false);
+  const [uploadPhoto, setUploadPhoto] = useState(null)
   const pickImage = async () => {
     const { status } =
       await ExpoImagePicker.requestMediaLibraryPermissionsAsync();
@@ -22,20 +27,48 @@ const ImagePicker = () => {
     });
 
     if (!result?.cancelled) {
-      setSelectedImage(result?.uri);
+      setSelectedImage(result.assets[0].uri);
+      setUploadPhoto(result.assets[0].uri)
+      console.log(typeof result.uri, typeof result, result)
+      // imageSetter(result?.uri)
     }
   };
-
+  const onUpdateIntituePhoto = useCallback(() => {
+    paperServices.updateIntituePhoto(uploadPhoto)
+        .then((res) => {
+            console.log(res, "photo updated")
+            imageSetter(res.institute.instituteLogo)
+        })
+        .catch(error => {
+            console.log(error, "photo update error")
+            // setName(oldName)
+        }).finally(() => {
+          // setIsEdit(false)
+        })
+}, [uploadPhoto])
+// console.log(selectedImage)
   return (
     <View style={styles.container}>
-      {selectedImage ? (
-        <Image source={{ uri: selectedImage }} style={styles.image} />
+      {image ? (
+        <Image source={{ uri: uploadPhoto || image }} style={styles.image} />
       ) : (
         <View style={styles.image}>
           <Icon name="image" size={130} color="gray" />
         </View>
       )}
-      <Button title="Upload Image" onPress={pickImage} />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', gap: 10 }}>
+        {!isEdit && <Button title="Change Photo" onPress={() => { 
+          setIsEdit(true) 
+          pickImage()
+        }} />}
+        {isEdit && <Button title="Upload Image" color={"green"} onPress={()=>{
+          onUpdateIntituePhoto()
+        }} />}
+        {isEdit && <Button title="Cancel" color={"red"} onPress={() => { 
+          setUploadPhoto(null)
+          setIsEdit(false)
+           }} />}
+      </View>
     </View>
   );
 };

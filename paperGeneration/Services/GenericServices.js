@@ -23,10 +23,28 @@ export default class GenericServices {
   };
 
   post = (url, data) => {
-    console.log("post=",`${this.baseAPI.defaults.baseURL}/${url}`)
+    console.log("post=", `${this.baseAPI.defaults.baseURL}/${url}`)
     return new Promise((resolve, reject) => {
       this.baseAPI
         .post(url, data)
+        .then((res) => {
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err?.response?.data || err);
+        });
+    });
+  };
+  post_file = (
+    url,
+    data,
+    ) => {
+    console.log("post=", `${this.baseAPI.defaults.baseURL}/${url}`)
+    return new Promise((resolve, reject) => {
+      this.baseAPI
+        .post(url, data,  {headers: {
+          'Content-Type': 'multipart/form-data',
+        }})
         .then((res) => {
           resolve(res.data);
         })

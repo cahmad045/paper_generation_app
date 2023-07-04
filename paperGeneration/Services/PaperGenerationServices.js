@@ -40,16 +40,16 @@ class PaperGenerationServices extends GenericServices {
     let formData = new FormData();
     formData.append("name", name);
     return new Promise((resolve, reject) => {
-      this.post(`${links.userInstitue}`, formData)
+      this.post(`${links.userInstitue}`, {name})
         .then(data => resolve(data))
         .catch(error => reject(error))
     })
   }
-  updateIntituePhoto = (files) => {
+  updateIntituePhoto = (file) => {
     let formData = new FormData();
-    formData.append("file", files);
+    formData.append("file", file.split("/").pop());
     return new Promise((resolve, reject) => {
-      this.post(`${links.userInstituePhoto}`, formData)
+      this.post_file(`${links.userInstituePhoto}`, formData)
         .then(data => resolve(data))
         .catch(error => reject(error))
     })
