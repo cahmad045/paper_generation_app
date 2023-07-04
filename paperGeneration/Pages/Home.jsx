@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser, updateUser } from "../redux/userSlice";
 import { authServices } from "../Services/AuthServices";
 import { selectPaper } from "../redux/PaperSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // import NavigationBar from "react-native-navbar";
 
 const Home = ({ navigation }) => {
@@ -47,6 +48,7 @@ const Home = ({ navigation }) => {
             buttonText="Logout"
             onPress={() => {
               dispatch(updateUser({}));
+              AsyncStorage.removeItem("user_login")
             }}
             buttonWidth={150}
             buttonHeight={100}

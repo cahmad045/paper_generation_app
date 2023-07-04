@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 // import { createStackNavigator } from "@react-navigation/stack";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -16,15 +16,32 @@ import SignUp from "../Pages/SignUp";
 import { useSelector } from "react-redux";
 import { selectUser } from "../redux/userSlice";
 import UserProfile from "../Pages/UserProfile";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import SplashScreen from "../Pages/SplashScreen";
 
 const Stack = createNativeStackNavigator();
 const MyStack = () => {
   const user = useSelector(selectUser);
+  const [isSplash, setIsSplash] = useState(true)
+  useEffect(() => {
+    console.log("Aync Fn")
+    AsyncStorage.getItem("user_login").then((result) => {
+
+      if (result) {
+        console.log(typeof result, result)
+      }
+      console.log(typeof result, result, "async out if")
+    }).catch(error => {
+      console.log(error, "error aysnc")
+    })
+  }, [])
+  useEffect(() => { console.log("setter", isSplash) }, [isSplash])
   return (
     <NavigationContainer>
       <Stack.Navigator>
         {!user.isLoggedIn && (
           <>
+            {isSplash && <Stack.Screen name="SplashScreen" component={SplashScreen} />}
             <Stack.Screen name="SignIn" component={SignIn} />
             <Stack.Screen name="SignUp" component={SignUp} />
           </>
@@ -34,7 +51,7 @@ const MyStack = () => {
             <Stack.Screen
               name="Home"
               component={Home}
-              //   options={{ title: "Welcome" }}
+            //   options={{ title: "Welcome" }}
             />
             <Stack.Screen name="ClassSelection" component={ClassSelection} />
             <Stack.Screen

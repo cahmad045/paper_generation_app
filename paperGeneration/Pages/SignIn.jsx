@@ -12,6 +12,7 @@ import { authServices } from "../Services/AuthServices";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, updateUser } from "../redux/userSlice";
 import { toast } from "../App";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -22,8 +23,10 @@ const SignIn = ({ navigation }) => {
     authServices.login(email, password)
       .then(res => {
         if(res?.user?.isAdmin === false){
+          console.log(res.user)
           dispatch(updateUser({ ...res?.user, isLoggedIn: true }))
           toast("Logged In")
+          AsyncStorage.setItem("user_login", JSON.stringify(res.user))
         }else{
           toast("Login Failed - Not a user")
         }
@@ -46,7 +49,17 @@ const SignIn = ({ navigation }) => {
   useEffect(() => {
     console.log(user.isLoggedIn, "user state home jsx")
   }, [user])
-  // useEffect(, [])
+  useEffect(()=>{
+    console.log("Aync Fn")
+    AsyncStorage.getItem("user_login").then((result)=>{
+      if(result){
+        console.log(typeof result, result)
+      }
+      console.log(result, "async out if")
+    }).catch(error=>{
+      console.log(error, "error aysnc")
+    })
+  }, [])
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>

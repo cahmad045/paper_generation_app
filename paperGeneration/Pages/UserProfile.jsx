@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,30 +8,70 @@ import {
   TouchableOpacity,
 } from "react-native";
 import ImagePicker from "../Components/ImagePicker";
-
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "../redux/userSlice";
+import { paperServices } from "../Services/PaperGenerationServices";
+import { setInstitue } from "../redux/PaperSlice";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 const UserProfile = () => {
   const userImage = require("../assets/COMSATS.jpg"); // Replace with the path to the user image
+  const user = useSelector(selectUser)
+  const dispatch = useDispatch()
   const [instituteName, setInstituteName] = useState("abc Institute");
   const [email, setEmail] = useState("abc@gmail.com");
+  const [edit, setEdit] = useState(false)
+  const [upload, setUpload] = useState(false)
+  const [name, setName] = useState('')
+  const [photo, setPhoto] = useState('')
+  const [uploadPhoto, setUploadPhoto] = useState('')
+  const [oldName, setOldName] = useState('')
+  const [userPapers, setUserPapers] = useState(null)
   const handleUpdate = () => {
     console.log("Update Successfully");
   };
+  const getProfile = useCallback(() => {
+    paperServices.getProfile()
+      .then(result => {
+        console.log(result?.institute?.instituteName, "User Profile")
+        dispatch(setInstitue(result?.institute))
+        // setPhoto(result?.institute.instituteLogo)
+        setName(result?.institute?.instituteName)
+        setOldName(result?.institute?.instituteName)
+        setUserPapers(result?.institute?.papers)
+      })
+      .catch(error => {
+        console.log(error, "get profile error")
+      })
+  }, [])
+  useEffect(() => {
+    getProfile()
+  }, [])
   return (
     <View style={styles.container}>
-      <ImagePicker />
+      <ImagePicker isEdit = {edit}/>
+      <Text>{}</Text>
       {/* <Image source={userImage} style={styles.userImage} /> */}
       <Text style={styles.emailText}>{email}</Text>
       <TextInput
-        value={instituteName}
-        onChangeText={setInstituteName}
+        value={name}
+        onChangeText={setName}
         style={styles.instituteNameInput}
         placeholder="Enter Institute Name"
         editable
       />
 
-      <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
-        <Text style={styles.buttonText}>Update</Text>
-      </TouchableOpacity>
+      {edit ?
+        <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
+          <Text style={styles.buttonText}>Update</Text>
+          <MaterialIcons name="save" size={24} color="black" />
+        </TouchableOpacity>
+        :
+        <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
+          <Text style={styles.buttonText}>Edit Profile</Text>
+          <MaterialCommunityIcons name="circle-edit-outline" size={24} color="black" />
+        </TouchableOpacity>
+      }
     </View>
   );
 };
@@ -75,7 +115,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     marginTop: 16,
     width: "60%",
+    justifyContent: 'center',
     alignItems: "center",
+    flexDirection: 'row',
+    gap: 5
   },
 
   buttonText: {

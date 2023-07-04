@@ -21,8 +21,8 @@ const ImagePicker = () => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
-      setSelectedImage(result.uri);
+    if (!result?.cancelled) {
+      setSelectedImage(result?.uri);
     }
   };
 
