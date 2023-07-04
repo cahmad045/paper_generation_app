@@ -44,7 +44,7 @@ const MyStack = () => {
             />
             <Stack.Screen name="PaperCriteria" component={PaperCriteria} />
             <Stack.Screen
-              name="AIGnerationCriteria"
+              name="AIGenerationCriteria"
               component={AIGenerationCriteria}
             />
             <Stack.Screen name="Paper" component={Paper} />

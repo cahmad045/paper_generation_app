@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,45 +7,97 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { setaiQuestions } from "../redux/PaperSlice";
+import Loader from "../Components/Loader";
 
 const AIGenerationCriteria = () => {
+  const dispatch = useDispatch();
   const [paragraph, setParagraph] = useState("");
   const [questions, setQuestions] = useState([]);
+  // const [outputText, setOutputText] = useState([]);
+  const [messageResponse, setMessageResponse] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    dispatch(setaiQuestions(questions));
+  }, [questions]);
+
+  useEffect(() => {
+    if (messageResponse !== "") {
+      window.alert(messageResponse);
+    }
+  }, [messageResponse]);
 
   const handleParagraphChange = (value) => {
     setParagraph(value);
   };
 
   const handleGenerateQuestions = () => {
-    const generatedQuestions = ["Question will display here"];
-
-    setQuestions(generatedQuestions);
+    // const generatedQuestions = ["Question will display here"];
+    console.log("Sending request to server");
+    setIsLoading(true);
+    fetch("http://192.168.10.8:4000/executePython", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        scriptPath: "E:/Semester 8/NLP_model/NLP",
+        args: [paragraph],
+        // ques_num: textFieldValue,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const res = data.response;
+        console.log(res.array);
+        setQuestions(res.array);
+        setMessageResponse(res.msg);
+        dispatch(setaiQuestions(res?.array));
+        console.log(res.msg);
+        // Further processing or rendering of the question in your React app
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      })
+      .finally(() => setIsLoading(false));
+    // setQuestions(generatedQuestions);
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>Question Generator</Text>
-      <Text>Enter Paragraph:</Text>
-      <TextInput
-        style={styles.textArea}
-        multiline={true}
-        numberOfLines={10}
-        placeholder="Enter paragraph here"
-        value={paragraph}
-        onChangeText={handleParagraphChange}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleGenerateQuestions}>
-        <Text style={styles.buttonText}>Generate Questions</Text>
-      </TouchableOpacity>
-      {questions.length > 0 && (
-        <View>
-          <Text style={styles.subheading}>Generated Questions:</Text>
-          {questions.map((question, index) => (
-            <Text key={index} style={styles.question}>
-              {question}
-            </Text>
-          ))}
-        </View>
+      {isLoading ? (
+        <Loader style={styles.loader} />
+      ) : (
+        <>
+          <Text style={styles.heading}>Question Generator</Text>
+          <Text>Enter Paragraph:</Text>
+          <TextInput
+            style={styles.textArea}
+            multiline={true}
+            numberOfLines={10}
+            placeholder="Enter paragraph here"
+            value={paragraph}
+            onChangeText={handleParagraphChange}
+          />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleGenerateQuestions}
+          >
+            <Text style={styles.buttonText}>Generate Questions</Text>
+          </TouchableOpacity>
+          {questions.length > 0 && (
+            <View>
+              <Text style={styles.subheading}>Generated Questions:</Text>
+              {questions.map((question, index) => (
+                <Text key={index} style={styles.question}>
+                  {question}
+                </Text>
+              ))}
+            </View>
+          )}
+        </>
       )}
     </ScrollView>
   );
@@ -90,6 +142,9 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 16,
     marginBottom: 5,
+  },
+  loader: {
+    marginTop: "100%",
   },
 });
 

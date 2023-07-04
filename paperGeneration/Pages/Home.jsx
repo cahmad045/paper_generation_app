@@ -30,7 +30,7 @@ const Home = ({ navigation }) => {
   };
 
   const handleAIgeneration = () => {
-    navigation.navigate("UserProfile");
+    navigation.navigate("AIGenerationCriteria");
   };
 
   return (
