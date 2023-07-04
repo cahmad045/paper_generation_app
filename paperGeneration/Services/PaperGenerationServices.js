@@ -47,7 +47,7 @@ class PaperGenerationServices extends GenericServices {
   }
   updateIntituePhoto = (file) => {
     let formData = new FormData();
-    formData.append("file", file.split("/").pop());
+    formData.append("file", file.split("//").pop());
     return new Promise((resolve, reject) => {
       this.post_file(`${links.userInstituePhoto}`, formData)
         .then(data => resolve(data))

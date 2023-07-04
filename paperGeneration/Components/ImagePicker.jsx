@@ -29,6 +29,7 @@ const ImagePicker = ({
     if (!result?.cancelled) {
       setSelectedImage(result.assets[0].uri);
       setUploadPhoto(result.assets[0].uri)
+      setUploadPhoto(result.uri)
       console.log(typeof result.uri, typeof result, result)
       // imageSetter(result?.uri)
     }
