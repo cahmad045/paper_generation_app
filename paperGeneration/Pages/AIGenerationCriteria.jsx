@@ -15,6 +15,7 @@ const AIGenerationCriteria = () => {
   const dispatch = useDispatch();
   const [paragraph, setParagraph] = useState("");
   const [questions, setQuestions] = useState([]);
+  const [numOfQuestions, setNumOfQuestions] = useState();
   // const [outputText, setOutputText] = useState([]);
   const [messageResponse, setMessageResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,8 +34,14 @@ const AIGenerationCriteria = () => {
     setParagraph(value);
   };
 
+  const handleNumberOfQuestionsChange = (text) => {
+    // const parsedValue = parseInt(text);
+    setNumOfQuestions(text);
+  };
+
   const handleGenerateQuestions = () => {
     // const generatedQuestions = ["Question will display here"];
+    console.log(numOfQuestions);
     console.log("Sending request to server");
     setIsLoading(true);
     fetch("http://192.168.10.8:4000/executePython", {
@@ -45,7 +52,7 @@ const AIGenerationCriteria = () => {
       body: JSON.stringify({
         scriptPath: "E:/Semester 8/NLP_model/NLP",
         args: [paragraph],
-        // ques_num: textFieldValue,
+        ques_num: numOfQuestions,
       }),
     })
       .then((response) => response.json())
@@ -80,6 +87,13 @@ const AIGenerationCriteria = () => {
             placeholder="Enter paragraph here"
             value={paragraph}
             onChangeText={handleParagraphChange}
+          />
+          <TextInput
+            style={styles.textInput}
+            keyboardType="numeric"
+            placeholder="Number of Questions"
+            value={numOfQuestions}
+            onChangeText={handleNumberOfQuestionsChange}
           />
           <TouchableOpacity
             style={styles.button}
@@ -145,6 +159,13 @@ const styles = StyleSheet.create({
   },
   loader: {
     marginTop: "100%",
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 5,
+    padding: 5,
+    marginBottom: 10,
   },
 });
 
