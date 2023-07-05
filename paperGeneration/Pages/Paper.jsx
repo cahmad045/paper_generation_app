@@ -180,7 +180,7 @@ const Paper = ({ navigation, route, ...props }) => {
     }
   );
 
-  const test = "ggg";
+  const test = ["a","b","c"].map((v,i)=><> Hello </>);
   const html = `
   <html>
   <head>

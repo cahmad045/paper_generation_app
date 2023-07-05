@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet, Button, Platform, Text } from 'react-native';
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
-
+let arr = ["a", "b", "c"]
 const html = `
 <html>
 <head>
@@ -39,6 +39,7 @@ eiusmod tempor
 <p>Q3: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
 eiusmod tempor
 </p>
+${arr.map((v, i) => (<p>{i}. Hello {v}</p>))}
 </body>
 </html>
 `;
@@ -49,8 +50,8 @@ export default function App() {
   const print = async () => {
     // On iOS/android prints the given html. On web prints the HTML from the current page.
     await Print.printAsync({
-      html,
-    //   printerUrl: selectedPrinter?.url, // iOS only
+      html:arr.map((v,i)=><p>{i}. Hello {v}</p>)
+      //   printerUrl: selectedPrinter?.url, // iOS only
     });
   };
 
@@ -61,18 +62,18 @@ export default function App() {
     await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
   };
 
-//   const selectPrinter = async () => {
-//     const printer = await Print.selectPrinterAsync(); // iOS only
-//     setSelectedPrinter(printer);
-//   };
+  //   const selectPrinter = async () => {
+  //     const printer = await Print.selectPrinterAsync(); // iOS only
+  //     setSelectedPrinter(printer);
+  //   };
 
   return (
     <View style={styles.container}>
       <Button title="View pdf" onPress={print} />
       <View style={styles.spacer} />
       <Button title="Save pdf" onPress={printToFile} />
-     
-        {/* <>
+
+      {/* <>
           <View style={styles.spacer} />
           <Button title="Select printer" onPress={selectPrinter} />
           <View style={styles.spacer} />
@@ -80,7 +81,7 @@ export default function App() {
             <Text style={styles.printer}>{`Selected printer: ${selectedPrinter.name}`}</Text>
           ) : undefined}
         </> */}
-    
+
     </View>
   );
 }

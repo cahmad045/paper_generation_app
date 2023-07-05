@@ -8,37 +8,37 @@ import { selectUser, updateUser } from "../redux/userSlice";
 const NavList = ({ navigation }) => {
   const dispatch = useDispatch()
 
-const NavList = ({ navigation }) => {
-  const dispatch = useDispatch();
+  const NavList = ({ navigation }) => {
+    const dispatch = useDispatch();
 
-  const handleButtonPress = (page) => {
-    // Handle button press and navigate to the selected page
-    console.log(`Navigating to ${page}`);
-  };
+    const handleButtonPress = (page) => {
+      // Handle button press and navigate to the selected page
+      console.log(`Navigating to ${page}`);
+    };
 
-  const handleProfile = () => {
-    // Handle button press and navigate to the selected page
-    navigation.navigate("UserProfile");
-    // props.handleProp();
-    console.log("profile");
-  };
+    const handleProfile = () => {
+      // Handle button press and navigate to the selected page
+      navigation.navigate("UserProfile");
+      // props.handleProp();
+      console.log("profile");
+    };
 
-  return (
-    <View style={styles.listContainer}>
-      <TouchableOpacity onPress={handleProfile} style={styles.button}>
-        <Text style={styles.buttonText}>Profile</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          handleButtonPress("logout")
-          dispatch(updateUser({}));
-          AsyncStorage.removeItem("user_login")
-        }}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Logout</Text>
-      </TouchableOpacity>
-      {/* <TouchableOpacity
+    return (
+      <View style={styles.listContainer}>
+        <TouchableOpacity onPress={handleProfile} style={styles.button}>
+          <Text style={styles.buttonText}>Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            handleButtonPress("logout")
+            dispatch(updateUser({}));
+            AsyncStorage.removeItem("user_login")
+          }}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
+        {/* <TouchableOpacity
         onPress={() => handleButtonPress("Page 3")}
         style={styles.button}
       >
@@ -50,10 +50,10 @@ const NavList = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Page 4</Text>
       </TouchableOpacity> */}
-    </View>
-  );
-};
-
+      </View>
+    );
+  };
+}
 export default NavList;
 
 const styles = StyleSheet.create({
