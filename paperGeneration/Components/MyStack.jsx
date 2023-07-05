@@ -19,32 +19,39 @@ import UserProfile from "../Pages/UserProfile";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SplashScreen from "../Pages/SplashScreen";
 import PdfGeneration from "../Pages/PdfGeneration";
+import ForgotPassword from "../Pages/ForgotPassword";
 
 const Stack = createNativeStackNavigator();
 const MyStack = () => {
   const user = useSelector(selectUser);
-  const [isSplash, setIsSplash] = useState(true)
+  const [isSplash, setIsSplash] = useState(true);
   useEffect(() => {
-    console.log("Aync Fn")
-    AsyncStorage.getItem("user_login").then((result) => {
-
-      if (result) {
-        console.log(typeof result, result)
-      }
-      console.log(typeof result, result, "async out if")
-    }).catch(error => {
-      console.log(error, "error aysnc")
-    })
-  }, [])
-  useEffect(() => { console.log("setter", isSplash) }, [isSplash])
+    console.log("Aync Fn");
+    AsyncStorage.getItem("user_login")
+      .then((result) => {
+        if (result) {
+          console.log(typeof result, result);
+        }
+        console.log(typeof result, result, "async out if");
+      })
+      .catch((error) => {
+        console.log(error, "error aysnc");
+      });
+  }, []);
+  useEffect(() => {
+    console.log("setter", isSplash);
+  }, [isSplash]);
   return (
     <NavigationContainer>
       <Stack.Navigator>
         {!user.isLoggedIn && (
           <>
-            {isSplash && <Stack.Screen name="SplashScreen" component={SplashScreen} />}
+            {isSplash && (
+              <Stack.Screen name="SplashScreen" component={SplashScreen} />
+            )}
             <Stack.Screen name="SignIn" component={SignIn} />
             <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
           </>
         )}
         {user.isLoggedIn && (
@@ -52,7 +59,7 @@ const MyStack = () => {
             <Stack.Screen
               name="Home"
               component={Home}
-            //   options={{ title: "Welcome" }}
+              //   options={{ title: "Welcome" }}
             />
             <Stack.Screen name="ClassSelection" component={ClassSelection} />
             <Stack.Screen
