@@ -4,20 +4,21 @@ import TestingNav from "../Components/TestingNav";
 import Slider from "../Components/Slider";
 import ButtonDesign from "../Components/ButtonDesign";
 import { paperServices } from "../Services/PaperGenerationServices";
-import { useDispatch } from "react-redux"
+import { useDispatch } from "react-redux";
 import { setclassLevelId, setclassLevelName } from "../redux/PaperSlice";
 const ClassSelection = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
-  const [classes, setClasses] = useState([])
+  const [classes, setClasses] = useState([]);
   const dispatch = useDispatch();
   useEffect(() => {
-    paperServices.getClasses()
-      .then(value => setClasses(value?.classLevels))
+    paperServices
+      .getClasses()
+      .then((value) => setClasses(value?.classLevels))
       .catch((error) => {
-        console.log(error, "classes", error.message)
+        console.log(error, "classes", error.message);
       })
-      .finally(() => setLoading(false))
-  }, [navigation])
+      .finally(() => setLoading(false));
+  }, [navigation]);
 
   const handleClassLevelClick = (event, classLevel, classLevelId) => {
     // const classLevel = event.target.value;
@@ -33,20 +34,30 @@ const ClassSelection = ({ navigation }) => {
   };
   return (
     <View style={styles.container}>
-      <TestingNav />
+      <TestingNav navigation={navigation} />
       <View style={{ flex: 1 }}>
-        <Slider />
-        <View
-        //  style={styles.buttonContainer}
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+            marginTop: 10,
+            marginLeft: 20,
+          }}
         >
+          Select your class...
+        </Text>
+        {/* <Slider /> */}
+        <View style={styles.buttonContainer}>
           {classes &&
             classes?.map((value, index) => (
               <View key={index} style={styles.buttonStyle}>
                 <ButtonDesign
                   key={index}
-                  onPress={(e) => handleClassLevelClick(e, value?.level, value?._id)}
+                  onPress={(e) =>
+                    handleClassLevelClick(e, value?.level, value?._id)
+                  }
                   buttonText={value?.level}
-                  buttonWidth={150}
+                  buttonWidth={200}
                   buttonHeight={100}
                 />
               </View>
@@ -64,16 +75,31 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
-    position: "absolute",
-    bottom: 100,
+    // position: "absolute",
+    // bottom: 100,
+    // justifyContent: "space-between",
+    // alignItems: "center",
     // Adjust the value to move the button up or down
     // borderWidth: 1,
     // borderColor: "red",
-    alignSelf: "center",
-    flexDirection: "row",
+    // alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 70,
+    // borderWidth: 10,
+    // borderColor: "red",
+    // flexDirection: "row",
   },
 
   buttonStyle: {
-    margin: 10,
+    // margin: 10,
+    width: "48%", // Adjust the width of the button container to fit two buttons
+    marginVertical: 10,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between", // Align buttons with space between them
+    flexWrap: "wrap", // Allow buttons to wrap to the next row
+    marginBottom: 100,
   },
 });

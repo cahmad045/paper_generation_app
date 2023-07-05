@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 50,
     backgroundColor: "#FF9999",
+    borderRadius: 10,
   },
   backgroundImage: {
     position: "absolute",

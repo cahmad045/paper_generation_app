@@ -1,7 +1,12 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser, updateUser } from "../redux/userSlice";
 
 const NavList = ({ navigation }) => {
+  const dispatch = useDispatch();
+
   const handleButtonPress = (page) => {
     // Handle button press and navigate to the selected page
     console.log(`Navigating to ${page}`);
@@ -20,12 +25,15 @@ const NavList = ({ navigation }) => {
         <Text style={styles.buttonText}>Profile</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => handleButtonPress("Page 2")}
+        onPress={() => {
+          dispatch(updateUser({}));
+          AsyncStorage.removeItem("user_login");
+        }}
         style={styles.button}
       >
-        <Text style={styles.buttonText}>Page 2</Text>
+        <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => handleButtonPress("Page 3")}
         style={styles.button}
       >
@@ -36,7 +44,7 @@ const NavList = ({ navigation }) => {
         style={styles.button}
       >
         <Text style={styles.buttonText}>Page 4</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
