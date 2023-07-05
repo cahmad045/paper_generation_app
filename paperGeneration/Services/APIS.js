@@ -6,6 +6,8 @@ import axios from "axios";
 // const baseURL = 'http://192.168.153.85:4000'
 // const baseURL = "http://192.168.10.8:4000";
 export const baseURL = "http://192.168.2.4:4000"; //ye mera ip hai, apna alg se bnana bhai 🙂
+// const baseURL = "http://192.168.10.8:4000";
+// const baseURL = "http://192.168.2.4:4000"; //ye mera ip hai, apna alg se bnana bhai 🙂
 export const APIuser = axios.create({
   baseURL: `${baseURL}/users`,
 });

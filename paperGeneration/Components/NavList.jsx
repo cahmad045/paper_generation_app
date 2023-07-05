@@ -1,11 +1,16 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
-import { updateUser } from "../redux/userSlice";
-import { useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser, updateUser } from "../redux/userSlice";
+
 
 const NavList = ({ navigation }) => {
   const dispatch = useDispatch()
+
+const NavList = ({ navigation }) => {
+  const dispatch = useDispatch();
+
   const handleButtonPress = (page) => {
     // Handle button press and navigate to the selected page
     console.log(`Navigating to ${page}`);
@@ -25,7 +30,7 @@ const NavList = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          handleButtonPress("Page 2")
+          handleButtonPress("logout")
           dispatch(updateUser({}));
           AsyncStorage.removeItem("user_login")
         }}

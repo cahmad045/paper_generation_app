@@ -34,9 +34,19 @@ const ClassSelection = ({ navigation }) => {
   return (
     <View style={styles.container}>
       {/* <TestingNav /> */}
-      <ScrollView contentContainerStyle={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+        <Text
+        style={{
+          fontSize: 20,
+          fontWeight: "bold",
+          marginTop: 10,
+          marginLeft: 20,
+        }}
+      >
+        Select any one subject...
+      </Text>
+      <View style={{ flex: 1,justifyContent: 'center', alignItems:'center' }}>
         {/* <Slider /> */}
-        <View
+        <ScrollView contentContainerStyle={{flex:1, justifyContent: 'center', alignItems:'center'}}
         //  style={styles.buttonContainer}
         >
           {classes &&
@@ -51,8 +61,8 @@ const ClassSelection = ({ navigation }) => {
                 />
               </View>
             ))}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </View>
   );
 };

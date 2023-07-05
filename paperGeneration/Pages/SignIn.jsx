@@ -17,49 +17,53 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const user = useSelector(selectUser)
+  const user = useSelector(selectUser);
   const handleSignIn = useCallback(() => {
     console.log("Sign in successfully.");
-    authServices.login(email, password)
-      .then(res => {
-        if(res?.user?.isAdmin === false){
-          console.log(res.user)
-          dispatch(updateUser({ ...res?.user, isLoggedIn: true }))
-          toast("Logged In")
-          AsyncStorage.setItem("user_login", JSON.stringify(res.user))
-        }else{
-          toast("Login Failed - Not a user")
+    authServices
+      .login(email, password)
+      .then((res) => {
+        if (res?.user?.isAdmin === false) {
+          console.log(res.user);
+          dispatch(updateUser({ ...res?.user, isLoggedIn: true }));
+          toast("Logged In");
+          AsyncStorage.setItem("user_login", JSON.stringify(res.user));
+        } else {
+          toast("Login Failed - Not a user");
         }
         // navigation.navigate("Home");
       })
       .catch((error) => {
-        console.log(error, "login")
-        toast(`Login Failed ${error?.status}`)
-      })
-  }, [email, password])
+        console.log(error, "login");
+        toast(`Login Failed ${error?.status}`);
+      });
+  }, [email, password]);
 
   const handleForgotPassword = () => {
+    navigation.navigate("ForgotPassword");
     console.log("Handle forgot password");
   };
 
   const handleCreateAccount = () => {
     navigation.navigate("SignUp");
   };
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
-    console.log(user.isLoggedIn, "user state home jsx")
-  }, [user])
-  useEffect(()=>{
-    console.log("Aync Fn")
-    AsyncStorage.getItem("user_login").then((result)=>{
-      if(result){
-        console.log(typeof result, result)
-      }
-      console.log(result, "async out if")
-    }).catch(error=>{
-      console.log(error, "error aysnc")
-    })
-  }, [])
+    console.log(user.isLoggedIn, "user state home jsx");
+  }, [user]);
+  useEffect(() => {
+    console.log("Aync Fn");
+    AsyncStorage.getItem("user_login")
+      .then((result) => {
+        if (result) {
+          console.log(typeof result, result);
+        }
+        console.log(result, "async out if");
+      })
+      .catch((error) => {
+        console.log(error, "error aysnc");
+      });
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>

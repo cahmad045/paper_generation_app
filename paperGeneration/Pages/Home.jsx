@@ -48,13 +48,13 @@ const Home = ({ navigation }) => {
             buttonText="Logout"
             onPress={() => {
               dispatch(updateUser({}));
-              AsyncStorage.removeItem("user_login")
+              AsyncStorage.removeItem("user_login");
             }}
             buttonWidth={150}
             buttonHeight={100}
           />
-        </View>
-        <View style={styles.buttonStyle}>
+        </View> */}
+        {/* <View style={styles.buttonStyle}>
           <ButtonDesign
             buttonText="Profile"
             // onPress={handlePaperGneration}
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: "absolute",
-    bottom: 250,
+    bottom: 240,
     // Adjust the value to move the button up or down
     alignSelf: "center",
     flexDirection: "row",
