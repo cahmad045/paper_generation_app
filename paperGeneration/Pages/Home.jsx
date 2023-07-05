@@ -21,11 +21,11 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     // console.log(JSON.stringify(paper), "paper state home jsx")
   }, [paper]);
-  useEffect(() => {
-    authServices.login("user@gmail.com", "1234567890").then((res) => {
-      dispatch(updateUser({ ...res?.user, isLoggedIn: true }));
-    });
-  }, []);
+  // useEffect(() => {
+  //   authServices.login("user@gmail.com", "1234567890").then((res) => {
+  //     dispatch(updateUser({ ...res?.user, isLoggedIn: true }));
+  //   });
+  // }, []);
   const handlePaperGneration = () => {
     navigation.navigate("ClassSelection");
   };
@@ -39,10 +39,10 @@ const Home = ({ navigation }) => {
       {/* <Navbar /> */}
       <TestingNav navigation={navigation} />
       <Slider />
-      <Text>
+      {/* <Text>
         {user.isLoggedIn && user.token ? "Logged In" : "Login Required"}
-      </Text>
-      <View style={{ flexDirection: "row", justifyContent: "center" }}>
+      </Text> */}
+      {/* <View style={{ flexDirection: "row", justifyContent: "center" }}>
         <View style={styles.buttonStyle}>
           <ButtonDesign
             buttonText="Logout"
@@ -62,7 +62,7 @@ const Home = ({ navigation }) => {
             buttonHeight={100}
           />
         </View>
-      </View>
+      </View> */}
       <View style={styles.buttonContainer}>
         <View style={styles.buttonStyle}>
           <ButtonDesign

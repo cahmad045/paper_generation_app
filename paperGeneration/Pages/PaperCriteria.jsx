@@ -365,7 +365,7 @@ const PaperCriteria = ({ navigation }) => {
         </View>
         {paper?.longQuestions?.map((value, index) => (
           <View key={index} style={styles.criteriaBox}>
-            <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: 'bold' }}>Total: {value.totalQuestions} - Attempt: {value.attempt} - Marks: {value.totalMarks}</Text>
+            <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: 'bold' }}>Total: {value.totalQuestions} - Attempt: {value.attempt} - Marks: {value.marks}</Text>
             <View style={styles.inputContainer}>
               <Text>No of long questions</Text>
               <TextInput

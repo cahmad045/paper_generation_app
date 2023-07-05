@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import TestingNav from "../Components/TestingNav";
 import Slider from "../Components/Slider";
@@ -33,9 +33,9 @@ const ClassSelection = ({ navigation }) => {
   };
   return (
     <View style={styles.container}>
-      <TestingNav />
-      <View style={{ flex: 1 }}>
-        <Slider />
+      {/* <TestingNav /> */}
+      <ScrollView contentContainerStyle={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+        {/* <Slider /> */}
         <View
         //  style={styles.buttonContainer}
         >
@@ -52,7 +52,7 @@ const ClassSelection = ({ navigation }) => {
               </View>
             ))}
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
