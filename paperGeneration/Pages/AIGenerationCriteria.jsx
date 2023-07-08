@@ -10,6 +10,7 @@ import {
 import { useDispatch } from "react-redux";
 import { setaiQuestions } from "../redux/PaperSlice";
 import Loader from "../Components/Loader";
+import { baseURL } from "../Services/APIS";
 
 const AIGenerationCriteria = () => {
   const dispatch = useDispatch();
@@ -44,13 +45,12 @@ const AIGenerationCriteria = () => {
     console.log(numOfQuestions);
     console.log("Sending request to server");
     setIsLoading(true);
-    fetch("http://192.168.10.8:4000/executePython", {
+    fetch(`${baseURL}/executePython`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        scriptPath: "E:/Semester 8/NLP_model/NLP",
         args: [paragraph],
         ques_num: numOfQuestions,
       }),

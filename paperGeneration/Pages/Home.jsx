@@ -54,7 +54,7 @@ const Home = ({ navigation }) => {
             buttonHeight={100}
           />
         </View> */}
-        {/* <View style={styles.buttonStyle}>
+      {/* <View style={styles.buttonStyle}>
           <ButtonDesign
             buttonText="Profile"
             // onPress={handlePaperGneration}

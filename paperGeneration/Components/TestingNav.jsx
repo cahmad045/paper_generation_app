@@ -6,6 +6,7 @@ const TestingNav = ({ navigation }) => {
   const [isListVisible, setListVisible] = useState(false);
 
   const handleIconPress = () => {
+    console.log("clicked");
     setListVisible(!isListVisible);
   };
 
