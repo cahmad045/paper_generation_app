@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import NavList from "./NavList";
 
 const TestingNav = ({ navigation }) => {
   const [isListVisible, setListVisible] = useState(false);
-
+  useEffect(() => {
+    console.log({ isListVisible })
+  }, [isListVisible])
   const handleIconPress = () => {
     console.log("clicked");
     setListVisible(!isListVisible);
@@ -27,7 +29,7 @@ const TestingNav = ({ navigation }) => {
         <View style={styles.icon}></View>
       </TouchableOpacity>
       {/* {isListVisible && <NavList handleProp={handleProp}/>} */}
-      {isListVisible && <NavList navigation={navigation} />}
+      {isListVisible && <NavList key={"navbar"} navigation={navigation} />}
     </View>
   );
 };

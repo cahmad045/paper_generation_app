@@ -7,10 +7,6 @@ import { selectUser, updateUser } from "../redux/userSlice";
 
 const NavList = ({ navigation }) => {
   const dispatch = useDispatch()
-
-  const NavList = ({ navigation }) => {
-    const dispatch = useDispatch();
-
     const handleButtonPress = (page) => {
       // Handle button press and navigate to the selected page
       console.log(`Navigating to ${page}`);
@@ -52,7 +48,6 @@ const NavList = ({ navigation }) => {
       </TouchableOpacity> */}
       </View>
     );
-  };
 }
 export default NavList;
 
@@ -87,7 +82,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e1e1e1",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    zIndex: 1,
+    zIndex: 1000,
   },
   button: {
     paddingVertical: 10,

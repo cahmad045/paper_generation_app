@@ -37,7 +37,7 @@ const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       {/* <Navbar /> */}
-      <TestingNav navigation={navigation} />
+      <TestingNav key={"navlist"} navigation={navigation} />
       <Slider />
       {/* <Text>
         {user.isLoggedIn && user.token ? "Logged In" : "Login Required"}
